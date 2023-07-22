@@ -11,7 +11,7 @@ interface Child {
 const Layout: FC<Child> = ({ children }) => {
   return (
     <main 
-      className="min-h-screen sm:p-10 py-24 px-10"
+      className="min-h-screen p-10 max-w-[1000px] mx-auto"
       style={{
         backgroundImage: `url(${bg.src})`,
         // objectFit: "cover",

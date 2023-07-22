@@ -28,8 +28,8 @@ const Date = () => {
             <hr />
           </div>
           <div className="text-white flex justify-between">
-            <a className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</a>
-            <a className="p-2 bg-[#14A44D] rounded-lg text-white">Selanjutnya</a>
+            <Link href="/input-harian" className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
+            <Link href={`/input-harian/${date}/final-category`} className="p-2 bg-[#14A44D] rounded-lg text-white">Selanjutnya</Link>
           </div>
         </div>
       </div>

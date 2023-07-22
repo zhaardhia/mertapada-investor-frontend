@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 import Layout from '@/components/Layout'
+import Link from 'next/link';
 
 const InputHarian: FC = () => {
   const tanggal: Array<number> = [1, 2 , 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]; // example day of month
@@ -13,11 +14,15 @@ const InputHarian: FC = () => {
           <div className="grid sm:grid-cols-5 grid-cols-4 sm:gap-4 gap-2">
             {tanggal.map((tgl) => {
               return (
-                <a href={`input-harian/${tgl}`} className="sm:p-2 p-1 bg-[#FFF8D6] rounded-lg text-center">
+                <a href={`input-harian/${tgl}`} className="sm:p-2 p-1 bg-[#FFF8D6] hover:bg-[#f5eecc] rounded-lg text-center">
                   {tgl}
                 </a>
               )
             })}
+          </div>
+          <div className="text-white flex justify-end">
+            <Link href={`/home`} className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
+            {/* <Link href={`/input-harian/${date}/final-category`} className="p-2 bg-[#14A44D] rounded-lg text-white">Selanjutnya</Link> */}
           </div>
         </div>
       </div>
