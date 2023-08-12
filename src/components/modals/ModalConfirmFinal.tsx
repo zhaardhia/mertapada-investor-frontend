@@ -8,35 +8,20 @@ interface ModalConfirmType {
   onApproved: () => Promise<void>;
   header: string;
   headerTitle: string;
+  setSure: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
-const ModalConfirm: React.FC<ModalConfirmType> = ({ setShowModal, onApproved, header, headerTitle }) => {
+const ModalConfirmFinal: React.FC<ModalConfirmType> = ({ setShowModal, onApproved, header, headerTitle, setSure }) => {
   const { axiosJWT, state } = useSessionUser()
   const [msgError, setMsgError] = useState<string | null>(null)
   const [msgSuccess, setMsgSuccess] = useState<string | null>(null)
-
-  const handleApproved = () => {
-    let fetch = null
-    try {
-      onApproved()
-      console.log({fetch})
-      setMsgSuccess(`Sukses melakukan verifikasi ${headerTitle}.`)
-    } catch (error) {
-      console.error(error)
-      setMsgError(`Gagal melakukan verifikasi ${headerTitle}. Silahkan hubungi admin`)
-      console.log("AWOKOAKOAW")
-    }
-    setTimeout(() => {
-      setShowModal(false)
-    }, 4000)
-  }
   
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none text-black">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           {/*content*/}
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-[90%] mx-auto bg-white outline-none focus:outline-none">
+          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-[90%] overflow-y-auto max-h-screen mx-auto bg-white outline-none focus:outline-none">
             {/*header*/}
             <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
               <h3 className="text-2xl text-center font-semibold">{header}</h3>
@@ -49,7 +34,18 @@ const ModalConfirm: React.FC<ModalConfirmType> = ({ setShowModal, onApproved, he
             </div>
             {/*body*/}
             <div className="relative p-6 flex-auto">
-              <p>Apakah anda yakin sudah menyimpan data <strong>{headerTitle}</strong> dengan benar?</p>
+              <p className="font-bold mb-5">Akan terjadi kesalahan fatal apabila terdapat kesalahan data yang sudah ter-verifikasi tahap akhir.</p>
+              <p>Berikut saran yang dapat diikuti untuk menghindari kesalahan fatal:</p>
+              <ul className="list-disc list-inside mt-3 flex flex-col gap-3 text-sm">
+                <li>Cek kembali data-data yang sudah diinput, perhatikan apakah semua yang diinput sudah benar.</li>
+                <li>Apabila terdapat data yang salah, segera hubungi pengurus / investor agar data dapat diubah terlebih dahulu melalui database, sebelum melakukan tahap verifikasi akhir.</li>
+              </ul>
+            </div>
+            <div className="p-6 flex flex-col gap-2">
+              <p>Ketik <strong>SAYA YAKIN</strong> dengan huruf besar untuk melanjutkan verifikasi.</p>
+              <input type="text" name="" id="" className="w-[80%] bg-slate-200 rounded-lg py-2 px-3" 
+                onChange={(e) => setSure(e.target.value)}
+              />
             </div>
             {/*footer*/}
             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
@@ -98,4 +94,4 @@ const ModalConfirm: React.FC<ModalConfirmType> = ({ setShowModal, onApproved, he
   );
 };
 
-export default ModalConfirm;
+export default ModalConfirmFinal;

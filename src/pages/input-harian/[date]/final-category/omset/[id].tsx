@@ -5,6 +5,7 @@ import { NumericFormat } from 'react-number-format';
 import { useSessionUser } from '@/contexts/SessionUserContext';
 import Link from 'next/link';
 import ModalConfirm from '@/components/modals/ModalConfirm';
+import { Alert } from '@/components/Alert';
 
 interface OmsetType {
   id: string;
@@ -25,6 +26,11 @@ const Omset = () => {
   const [loading, setLoading] = useState(false)
 
   const [showModal, setShowModal] = useState<boolean>(false)
+  const [alertState, setAlertState] = useState({
+    isShow: false,
+    type: "success",
+    message: "",
+  });
   console.log({date})
 
   useEffect(() => {
@@ -73,11 +79,22 @@ const Omset = () => {
           }
         }
       )
+
+      setAlertState({
+        isShow: true,
+        type: "success",
+        message: verifDailyReport.data.message,
+      });
     } catch (error) {
       console.error(error)
+      setAlertState({
+        isShow: true,
+        type: "error",
+        message: verifDailyReport?.message || "Gagal saat mengubah data absen" ,
+      });
     }
     setIsUpdate(false)
-    return verifDailyReport.message || "Gagal saat melakukan verifikasi"
+    setShowModal(false)
   }
 
   const handleCancelEdit = () => {
@@ -152,6 +169,20 @@ const Omset = () => {
           </div>
           {showModal && (
             <ModalConfirm onApproved={handleApproved} setShowModal={setShowModal} header="Omset" headerTitle='omset'/>
+          )}
+          {alertState.isShow && (
+            <Alert
+              showAlert={alertState.isShow}
+              hideAlert={() =>
+                setAlertState({
+                  isShow: false,
+                  type: "success",
+                  message: "",
+                })
+              }
+              message={alertState.message}
+              type={alertState.type}
+            />
           )}
         </div>
       </div>

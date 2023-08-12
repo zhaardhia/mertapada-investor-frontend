@@ -36,7 +36,7 @@ export const unitTypes: CustomOptionType[] = [
 
 export function formatRupiah(number: number | undefined) {
   if (number) return 'Rp ' + number.toLocaleString('id-ID');
-  return `Not a Number`
+  return 'Rp ' + 0
 }
 
 export function findCategoryShopExpense(categoryName: string | undefined) {

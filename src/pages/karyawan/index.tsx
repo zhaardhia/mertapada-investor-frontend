@@ -9,6 +9,7 @@ import ModalKaryawanGaji from '@/components/modals/ModalKaryawanGaji';
 import ModalConfirm from '@/components/modals/ModalConfirm';
 import ModalConfirmDelete from '@/components/modals/ModalConfirmDelete';
 import { NumericFormat } from 'react-number-format';
+import { Alert } from '@/components/Alert';
 
 const Karyawan: FC = () => {
   const router = useRouter();
@@ -22,6 +23,11 @@ const Karyawan: FC = () => {
   const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false)
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
   const [selectedDelete, setSelectedDelete] = useState<SelectedDeleteType>()
+  const [alertState, setAlertState] = useState({
+    isShow: false,
+    type: "success",
+    message: "",
+  });
 
   useEffect(() => {
     fetchAllEmployees()
@@ -88,12 +94,21 @@ const Karyawan: FC = () => {
 
       setEmployeesOrigin([...employees])
       setIsUpdate(false)
+      setAlertState({
+        isShow: true,
+        type: "success",
+        message: updateKaryawan.data.message,
+      });
     } catch (error) {
       console.error(error)
-      throw error
+      setAlertState({
+        isShow: true,
+        type: "error",
+        message: updateKaryawan.message,
+      });
     }
     setIsUpdate(false)
-    return updateKaryawan?.message || "Gagal saat melakukan verifikasi"
+    setShowModalConfirm(false)
   }
 
   const updateEmployeeSalary = (value: any, obj: EmployeeType) => {
@@ -147,7 +162,7 @@ const Karyawan: FC = () => {
               return (
                 <div className="flex flex-col">
                   <p className="text-white">{employee.name}</p>
-                  <div className="flex justify-between items-center mt-4 mb-4">
+                  <div className="flex justify-between w-[95%] items-center mt-4 mb-4">
                     <NumericFormat type="text" 
                       className="bg-[#FFF8D6] w-[55%] h-[2rem] rounded-xl py-2 px-3 disabled:opacity-60" 
                       thousandSeparator={true}
@@ -213,6 +228,20 @@ const Karyawan: FC = () => {
       )}
       {showModalDelete && (
         <ModalConfirmDelete nameToBeDeleted={selectedDelete?.name} onApproved={handleDeleteKaryawan} setShowModal={setShowModalDelete} header='Hapus Karyawan' headerTitle='karyawan' />
+      )}
+      {alertState.isShow && (
+        <Alert
+          showAlert={alertState.isShow}
+          hideAlert={() =>
+            setAlertState({
+              isShow: false,
+              type: "success",
+              message: "",
+            })
+          }
+          message={alertState.message}
+          type={alertState.type}
+        />
       )}
     </Layout>
   )

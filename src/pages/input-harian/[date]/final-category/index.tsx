@@ -3,18 +3,21 @@ import Layout from '@/components/Layout'
 import Link from 'next/link'
 import { useRouter } from 'next/router';
 import { useSessionUser } from '../../../../contexts/SessionUserContext'
+import ModalConfirmFinal from '@/components/modals/ModalConfirmFinal';
+import { Alert } from '@/components/Alert';
 
 interface FinalCategoryStatusType {
   daily_report_id: string;
   absence_filled: boolean;
   isVerified: boolean;
   omset_filled: boolean;
+  isReadyToVerif: boolean;
 }
 
 const FinalCategory = () => {
   const router = useRouter();
   const categories: Array<string> = ["Omset", "Absen"];
-  const { date } = router.query;
+  const { date, id } = router.query;
 
   const { state, axiosJWT, refreshToken, dispatch } = useSessionUser()
 
@@ -22,7 +25,13 @@ const FinalCategory = () => {
   const [omsetAndAbsence, setOmsetAndAbsence] = useState<FinalCategoryStatusType>()
   const [isAllowedNext, setIsAllowedNext] = useState<boolean>(false)
   const [isVerified, setIsVerified] = useState<boolean>(false)
-
+  const [showModalVerif, setShowModalVerif] = useState<boolean>(false)
+  const [sure, setSure] = useState<string>()
+  const [alertState, setAlertState] = useState({
+    isShow: false,
+    type: "success",
+    message: "",
+  });
 
   useEffect(() => {
     if (router?.query?.date) {
@@ -44,6 +53,8 @@ const FinalCategory = () => {
 
       if (response?.data?.data) {
         setOmsetAndAbsence(response.data.data)
+        setIsAllowedNext(response.data.data.isReadyToVerif)
+        setIsVerified(response.data.data.isVerified)
       }
       setLoading(false)
     } catch (error) {
@@ -51,7 +62,49 @@ const FinalCategory = () => {
       setLoading(false)
     }
   }
-  console.log({omsetAndAbsence})
+  
+  const handleApproved = async () => {
+    let verifFinal = null;
+    try {
+      verifFinal = await axiosJWT.put(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/verify-final`, 
+        {
+          id: omsetAndAbsence?.daily_report_id,
+          date,
+          sure
+        },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${state?.token}`
+          }
+        }
+      )
+
+      setOmsetAndAbsence({...omsetAndAbsence, isVerified: true } as FinalCategoryStatusType)
+      setIsVerified(true)
+      setShowModalVerif(false)
+      console.log(verifFinal.data.message)
+      setAlertState({
+        isShow: true,
+        type: "success",
+        message: verifFinal.data.message,
+      });
+      setSure(undefined)
+      // return verifDailyReport?.message
+    } catch (error) {
+      console.error(error)
+      // return verifDailyReport?.message || "Gagal saat melakukan verifikasi" 
+      console.log({verifFinal})
+      setAlertState({
+        isShow: true,
+        type: "error",
+        message: verifFinal?.message || "Gagal saat mengubah data absen" ,
+      });
+      setShowModalVerif(false)
+      setSure(undefined)
+    }
+  }
+  console.log({omsetAndAbsence}, {isAllowedNext, isVerified})
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
@@ -77,11 +130,37 @@ const FinalCategory = () => {
             </div>
             <div className="text-white flex justify-between mt-[15rem]">
               <Link href={`/input-harian/${date}`} className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
-              <Link href={`/input-harian/${date}/final-recap`} className="p-2 bg-[#14A44D] rounded-lg text-white">Selanjutnya</Link>
+              {isAllowedNext && isVerified ? 
+                (<Link href={`/input-harian/${date}/final-recap`} className="p-2 bg-[#14A44D] rounded-lg text-white">Selanjutnya</Link>) 
+              : isAllowedNext && !isVerified ? 
+                (
+                  <button className="p-2 bg-[#E4A11B] rounded-lg text-white" onClick={() => setShowModalVerif(true)}>Verifikasi Akhir</button>
+                ) :
+                (
+                  <button className="p-2 bg-[#14A44D] rounded-lg text-white opacity-60" disabled>Selanjutnya</button>
+                )
+              }
             </div>
           </div>
         </div>
       </div>
+      {showModalVerif && (
+        <ModalConfirmFinal onApproved={handleApproved}  setShowModal={setShowModalVerif} header='Verifikasi Final' headerTitle='verifikasi final' setSure={setSure} />
+      )}
+      {alertState.isShow && (
+        <Alert
+          showAlert={alertState.isShow}
+          hideAlert={() =>
+            setAlertState({
+              isShow: false,
+              type: "success",
+              message: "",
+            })
+          }
+          message={alertState.message}
+          type={alertState.type}
+        />
+      )}
     </Layout>
   )
 }

@@ -146,6 +146,9 @@ const Category = () => {
           }
         }
       )
+      setItemsOrigin(itemsOrigin)
+      setShopExpenseOrigin(shopExpense)
+      setItemsAdditionOrigin(itemsAddition)
       setShowModal(false)
       setItemAdditionUpdate(null)
       setIsUpdate(false)
