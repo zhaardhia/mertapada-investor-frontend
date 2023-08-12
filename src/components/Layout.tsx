@@ -1,14 +1,19 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC, ReactNode, useEffect } from 'react'
 // import Navbar from './Navbar'
 // import Nav from './Nav'
 // import Footer from './Footer'
 import bg from '../../public/bg-monda.png'
+import { useSessionUser } from '@/contexts/SessionUserContext'
 
 interface Child {
   children: ReactNode | null
 }
 
 const Layout: FC<Child> = ({ children }) => {
+  const { refreshToken } = useSessionUser()
+  useEffect(() => {
+    refreshToken()
+  }, [])
   return (
     <main 
       className="min-h-screen p-10 max-w-[1000px] mx-auto"

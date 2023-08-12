@@ -1,36 +1,137 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router';
+import { useSessionUser } from '../../contexts/SessionUserContext'
+import { useDataLaporan } from '../../contexts/DataLaporanContext'
 import Layout from '@/components/Layout';
 import Link from 'next/link';
+import { motion } from 'framer-motion'
+import { animateVibrate, animateFromAboveSlower, animateFromLeftWithOpacity } from '../../animations/animation'
+import { formatRupiah, findCategoryShopExpense } from '@/utils/util';
+import moment from 'moment';
+import 'moment/locale/id';  // Import the Indonesian locale
+import ModalVerifItemShop from '@/components/modals/ModalVerifItemShop';
+
+interface CheckCategoryType {
+  name: string;
+  filled: boolean;
+}
+moment.locale('id');
+
 const Date = () => {
   const router = useRouter();
   const { date } = router.query;
-  const category: Array<string> = ["Lauk - pauk", "Bumbu - bumbuan", "Sembako - Minuman", "Lain - Lain"]
+  const thisMonth = moment().format("MMMM YYYY")
+  console.log({thisMonth})
+
+  const { state, axiosJWT, refreshToken, dispatch } = useSessionUser()
+  // const category: Array<string> = ["Lauk - pauk", "Bumbu - bumbuan", "Sembako - Minuman", "Lain - Lain"]
+
+  const { dispatch: dispatchLaporan } = useDataLaporan()
+
+  const [loading, setLoading] = useState<boolean>(false)
+  const [shopExpense, setShopExpense] = useState<number>()
+  const [checkCategory, setCheckCategory] = useState<[]>([])
+  const [isAllowedNext, setIsAllowedNext] = useState<boolean>(false)
+  const [isVerified, setIsVerified] = useState<boolean>(false)
+  const [showModalVerif, setShowModalVerif] = useState<boolean>(false)
+  const [dailyReportId, setDailyReportId] = useState<string>('')
+
+  React.useEffect(() => {
+    if (router?.query?.date) {
+      fetchCheckCategory()
+    }
+  }, [router?.query?.date])
+
+  const fetchCheckCategory = async () => {
+    try {
+      setLoading(true)
+      
+      const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/check-category?date=${date}`, {
+        headers: {
+          Authorization: `Bearer ${state?.token}`
+        }
+      })
+      console.log(response)
+
+      setShopExpense(response.data.data.shop_expense)
+      setIsAllowedNext(response.data.data.isReadyToVerifCategory)
+      setIsVerified(response.data.data.isVerified)
+      setDailyReportId(response.data.data.daily_report_id)
+      if (response.data.data.responseCheckCategory) {
+        setCheckCategory(response.data.data.responseCheckCategory)
+      }
+      setLoading(false)
+    } catch (error) {
+      console.error(error)
+      setLoading(false)
+    }
+  }
+
+  const handleApproved = async () => {
+    let verifDailyReport = null;
+    try {
+      verifDailyReport = await axiosJWT.put(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/verify-shopped-by-category`, 
+        {
+          id: dailyReportId,
+          date
+        },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${state?.token}`
+          }
+        }
+      )
+
+      setIsVerified(true);
+    } catch (error) {
+      console.error(error)
+    }
+    return verifDailyReport.message || "Gagal saat melakukan verifikasi"
+  }
+
+  console.log({shopExpense}, {checkCategory}, {isVerified, isAllowedNext})
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
-        <p className='text-2xl text-start mx-auto'>Data Pengeluaran (30 Juli 2023)</p>
+        <p className='text-2xl text-start mx-auto'>Data Pengeluaran ({date} {thisMonth})</p>
         <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white text-center">Pilih Kategori Data</p>
           <div className="flex flex-col gap-4">
-            {category.map((tgl) => {
+            {checkCategory.map((category: CheckCategoryType) => {
               return (
-                <Link href={`input-harian/${tgl}`} className="p-2 bg-transparent border border-[#87E490] rounded-lg text-white sm:text-base text-sm flex justify-between">
-                  <p>{tgl}</p>
-                  <p className="text-[#87E490]">Sudah Terisi ✅</p>
+                <Link href={`/input-harian/${date}/${category?.name}`} onClick={() => {
+                  console.log({category})
+                  dispatchLaporan({ type: "setCurrentCategory", payload: category})
+                }} 
+                className={`p-2 bg-transparent border border-${category?.filled ? "[#87E490]" : "white"} rounded-lg text-white sm:text-base text-sm flex justify-between`}>
+                  <p>{category?.name}</p>
+                  {category?.filled ? <p className="text-[#87E490]">Sudah Terisi ✅</p> : <p className="">Belum Terisi</p>}
                 </Link>
               )
             })}
           </div>
           <div className="text-white flex flex-col gap-5">
             <p>Total Pengeluaran:</p>
-            <p className="text-right font-semibold">Rp 2.000.000</p>
+            <p className="text-right font-semibold">{formatRupiah(shopExpense)}</p>
             <hr />
           </div>
           <div className="text-white flex justify-between">
             <Link href="/input-harian" className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
-            <Link href={`/input-harian/${date}/final-category`} className="p-2 bg-[#14A44D] rounded-lg text-white">Selanjutnya</Link>
+            {isAllowedNext && isVerified ? 
+              (<Link href={`/input-harian/${date}/final-category`} className="p-2 bg-[#14A44D] rounded-lg text-white">Selanjutnya</Link>) 
+            : isAllowedNext && !isVerified ? 
+              (
+                <button className="p-2 bg-[#E4A11B] rounded-lg text-white" onClick={() => setShowModalVerif(true)}>Verifikasi Data Belanja</button>
+              ) :
+              (
+                <button className="p-2 bg-[#14A44D] rounded-lg text-white opacity-60" disabled>Selanjutnya</button>
+              )
+            }
           </div>
+          {showModalVerif && (
+            <ModalVerifItemShop onApproved={handleApproved}  setShowModal={setShowModalVerif} />
+          )}
         </div>
       </div>
     </Layout>

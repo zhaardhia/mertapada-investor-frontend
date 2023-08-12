@@ -56,7 +56,7 @@ export function SessionUserProvider({ children }: { children: ReactNode }) {
   axiosJWT.interceptors.request.use(async(config) => {
     const currentDate = new Date();
     // if (state?.expire < Math.floor(Date.now() / 1000)) {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/user/token`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/user-pengelola/token`, {
       withCredentials: true,
     })
     config.headers.Authorization = `Bearer ${response.data.data}`
@@ -71,7 +71,7 @@ export function SessionUserProvider({ children }: { children: ReactNode }) {
     console.log(error)
     dispatch({ type: "setIsLoggedIn", payload: false})
     Promise.reject(error);
-    return router.push("/login")
+    return router.push("/")
   })
 
   const axiosBasic = axios.create()
@@ -79,7 +79,7 @@ export function SessionUserProvider({ children }: { children: ReactNode }) {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/user/token`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/user-pengelola/token`, {
         withCredentials: true,
         headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}
       })
@@ -93,7 +93,7 @@ export function SessionUserProvider({ children }: { children: ReactNode }) {
     } catch (error: any) {
       dispatch({ type: "setIsLoggedIn", payload: false})
       if (error.response) {
-        router.push("/login")
+        router.push("/")
       }
       console.error(error)
     }
