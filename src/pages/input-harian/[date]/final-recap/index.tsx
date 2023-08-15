@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useDataLaporan } from '../../../../contexts/DataLaporanContext'
 import { useSessionUser } from '../../../../contexts/SessionUserContext'
 import { formatRupiah } from '@/utils/util';
+import moment from 'moment';
 
 interface FinalRecapType {
   id: string;
@@ -20,6 +21,7 @@ const FinalRecap = () => {
   const { date } = router.query;
   const { dispatch: dispatchLaporan } = useDataLaporan()
   const { state, axiosJWT, refreshToken, dispatch } = useSessionUser()
+  const thisMonth = moment().format("MMMM YYYY")
 
   const [loading, setLoading] = useState<boolean>(false)
   const [finalRecap, setFinalRecap] = useState<FinalRecapType>()
@@ -30,6 +32,7 @@ const FinalRecap = () => {
     if (router?.query?.date) {
       fetchFinalRecap()
     }
+    dispatch({ type: "setCurrentPage", payload: "Rekap Akhir" })
   }, [date])
 
   const fetchFinalRecap = async () => {
@@ -57,9 +60,8 @@ const FinalRecap = () => {
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
-        <p className='text-2xl text-start mx-auto'>Silahkan Input Data Hari Ini (30 Juli 2023)</p>
         <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
-          <p className="text-2xl text-white text-center">Rekap Akhir Data</p>
+          <p className="text-2xl text-white text-center">Rekap Akhir Data {date} {thisMonth}</p>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col">
               <div className="flex justify-between mt-4 mb-4">
@@ -98,11 +100,11 @@ const FinalRecap = () => {
             </div>
           </div>
           {/* muncul kalo udah di konfirm */}
-          <button className="p-2 bg-[#3B71CA] rounded-lg text-white">Download Excel</button>
+          {/* <button className="p-2 bg-[#3B71CA] rounded-lg text-white">Download Excel</button> */}
           {/* muncul kalo udah di konfirm */}
           <div className="text-white flex justify-between mt-10">
             <Link href={`/input-harian/${date}/final-category`} className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
-            <a className="p-2 bg-[#14A44D] rounded-lg text-white">Konfirmasi</a>
+            <Link href={`/input-harian/${date}/final-recap/${finalRecap?.id}`} className="p-2 bg-[#14A44D] rounded-lg text-white">Rincian Laporan</Link>
           </div>
         </div>
       </div>

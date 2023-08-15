@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useSessionUser } from '../../../../contexts/SessionUserContext'
 import ModalConfirmFinal from '@/components/modals/ModalConfirmFinal';
 import { Alert } from '@/components/Alert';
+import moment from 'moment';
 
 interface FinalCategoryStatusType {
   daily_report_id: string;
@@ -20,7 +21,7 @@ const FinalCategory = () => {
   const { date, id } = router.query;
 
   const { state, axiosJWT, refreshToken, dispatch } = useSessionUser()
-
+  const thisMonth = moment().format("MMMM YYYY")
   const [loading, setLoading] = useState<boolean>(false)
   const [omsetAndAbsence, setOmsetAndAbsence] = useState<FinalCategoryStatusType>()
   const [isAllowedNext, setIsAllowedNext] = useState<boolean>(false)
@@ -37,6 +38,7 @@ const FinalCategory = () => {
     if (router?.query?.date) {
       fetchAbsenOmset()
     }
+    dispatch({ type: "setCurrentPage", payload: "Kategori Data Harian" })
   }, [date])
 
   const fetchAbsenOmset = async () => {
@@ -108,7 +110,7 @@ const FinalCategory = () => {
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
-        <p className='text-2xl text-start mx-auto'>Data Pengeluaran (30 Juli 2023)</p>
+        <p className='text-2xl text-start mx-auto'>Data Omset & Absen ({date} {thisMonth})</p>
         <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5 h-[30rem]">
           <p className="text-2xl text-white text-center">Pilih Kategori Data</p>
           <div className="flex flex-col">

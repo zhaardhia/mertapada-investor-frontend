@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import bg from '../../public/bg-monda.png'
@@ -8,17 +8,17 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { animateVibrate } from "../animations/animation";
-
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const { refreshToken } = useSessionUser()
+  const { refreshToken, state } = useSessionUser()
   const router = useRouter();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [msgError, setMsgError] = useState<string>();
   const [visiblePass, setVisiblePass] = useState<boolean>(false)
 
+  console.log(state)
   const submitUser = async () => {
     console.log("tes");
     console.log({ username, password });
@@ -48,7 +48,10 @@ export default function Home() {
   return (
     <LayoutLogin>
       <div className="flex flex-col sm:gap-0 gap-10">
-        <p className="text-3xl text-center">Warteg Kharisma Bahari Mertapada</p>
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-2xl text-center font-semibold">Warteg Kharisma Bahari Mertapada</p>
+          <Image src="/icon-brand.png" alt={'warteg kharisma bahari'} width={120} height={120} />
+        </div>
         <div className="flex flex-col gap-5 w-full sm:w-auto sm:mt-14 bg-[#617A55] p-10 rounded-3xl">
           <div className="flex flex-col gap-2">
             <h1 className="text-xl font-light text-white">Masuk Sebagai Pengelola</h1>

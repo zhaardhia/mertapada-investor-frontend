@@ -10,10 +10,11 @@ interface Child {
 }
 
 const Layout: FC<Child> = ({ children }) => {
-  const { refreshToken } = useSessionUser()
+  const { refreshToken, state } = useSessionUser()
   useEffect(() => {
     refreshToken()
   }, [])
+  console.log(state.currentPage)
   return (
     <main 
       className="min-h-screen p-10 max-w-[1000px] mx-auto"
@@ -28,7 +29,7 @@ const Layout: FC<Child> = ({ children }) => {
       }}
     >
       <div className="bg-[#617A55] rounded-2xl w-full p-5 text-white text-center">
-        <p>Halaman Utama</p>
+        <p>Halaman {state?.currentPage || "Utama"}</p>
       </div>
       {/* <Nav /> */}
       {children}

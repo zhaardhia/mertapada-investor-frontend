@@ -11,6 +11,7 @@ import ModalDeleteAdditionalItem from '@/components/modals/ModalDeleteAdditional
 import { formatRupiah, findCategoryShopExpense } from '@/utils/util';
 import moment from 'moment';
 import 'moment/locale/id';  // Import the Indonesian locale
+import { Icon } from '@iconify/react';
 // import { itemShop } from '@/types/laporan';
 
 moment.locale('id');
@@ -60,11 +61,14 @@ const Category = () => {
   const [itemAdditionUpdate, setItemAdditionUpdate] = useState<itemShop | null>()
   const [itemAdditionDelete, setItemAdditionDelete] = useState<itemShop>()
 
+  const [isVerified, setIsVerified] = useState<boolean>(true)
+
   React.useEffect(() => {
     if (router?.query?.date) {
       fetchShopItem()
       setCategoryId(findCategoryShopExpense(categoryShop))
     }
+    dispatch({ type: "setCurrentPage", payload: categoryShop})
   }, [router?.query?.date])
   console.log({categoryShop}, typeof(categoryShop))
   const fetchShopItem = async () => {
@@ -88,6 +92,7 @@ const Category = () => {
         setShopExpenseOrigin(response?.data?.data?.shopExpense)
         setItemsAddition(additionalItem)
         setItemsAdditionOrigin(additionalItem)
+        setIsVerified(response.data.data.isVerified)
       }
       setLoading(false)
     } catch (error) {
@@ -177,7 +182,10 @@ const Category = () => {
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
-        <p className='text-2xl text-start mx-auto'>Silahkan Input Data Pengeluaran ({date} {thisMonth})</p>
+        <div className="flex flex-col items-center gap-3">
+          <Icon icon="mdi:file-report-outline" className="text-7xl" />
+          <p className='text-2xl text-start mx-auto'>Silahkan Input Data Pengeluaran ({date} {thisMonth})</p>
+        </div>
         <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white">{categoryShop}</p>
           <div className="flex flex-col gap-4 h-[32rem] overflow-y-scroll pr-5">
@@ -199,11 +207,11 @@ const Category = () => {
                         console.log(formattedValue, value);
                         addOrUpdateItemQuantity(value, item, "main")
                       }}
-                      className={`bg-[#FFF8D6] w-[25%] h-[2rem] rounded-xl p-2 text-center ${!isUpdate && "disabled:opacity-60"}`}
+                      className={`bg-[#FFF8D6] w-[25%] h-[2rem] rounded-xl p-2 text-center ${!isUpdate && "disabled:opacity-80"}`}
                       value={item?.quantity}
                       disabled={isUpdate ? false : true}
                     />
-                    <input type="text" className="bg-[#FFF8D6] w-[20%] h-[2rem] rounded-xl p-2 text-center" value={item?.unit_type} />
+                    <input disabled type="text" className="bg-[#FFF8D6] w-[30%] h-[2rem] rounded-xl p-2 text-center disabled:opacity-80" value={item?.unit_type} />
                     {/* <input
                       type="text"
                       className="bg-[#FFF8D6] w-[45%] h-[2rem] rounded-xl p-2 text-center"
@@ -222,7 +230,7 @@ const Category = () => {
                         console.log(formattedValue, value);
                         addOrUpdateItemPrice(value, item, "main")
                       }}
-                      className={`bg-[#FFF8D6] w-[50%] h-[2rem] rounded-xl p-2 text-center ${(!item?.quantity || !isUpdate) && "disabled:opacity-60"}`}
+                      className={`bg-[#FFF8D6] w-[40%] h-[2rem] rounded-xl p-2 text-center ${(!item?.quantity || !isUpdate) && "disabled:opacity-80"}`}
                       value={item?.price}
                       disabled={item?.quantity && isUpdate ? false : true}
                     />
@@ -252,14 +260,14 @@ const Category = () => {
                             value={itemAddition.quantity}
                             disabled={true}
                           />
-                          <input disabled type="text" className="bg-[#FFF8D6] w-[20%] h-[2rem] rounded-xl p-2 text-center disabled:opacity-75" value={itemAddition.unit_type} />
+                          <input disabled type="text" className="bg-[#FFF8D6] w-[25%] h-[2rem] rounded-xl p-2 text-center disabled:opacity-75" value={itemAddition.unit_type} />
                           <NumericFormat
                             thousandSeparator={true}
                             // prefix={'Rp'}
                             fixedDecimalScale={true}
                             allowNegative={false}
                             placeholder="Enter price"
-                            className={`bg-[#FFF8D6] w-[50%] h-[2rem] rounded-xl p-2 text-center disabled:opacity-75`}
+                            className={`bg-[#FFF8D6] w-[40%] h-[2rem] rounded-xl p-2 text-center disabled:opacity-75`}
                             value={itemAddition.price}
                             disabled={true}
                           />
@@ -278,11 +286,12 @@ const Category = () => {
                         )
                       : (
                           <button 
-                            className="text-white bg-red-600 w-full mx-auto rounded-lg shadow-lg p-2"
+                            className="text-white bg-red-600 w-full mx-auto rounded-lg shadow-lg p-2 disabled:opacity-75"
                             onClick={() => {
                               setItemAdditionDelete(itemAddition)
                               setShowModalDeleteItem(true)
                             }}
+                            disabled={isVerified}
                           >
                             Hapus Data
                           </button>
@@ -315,15 +324,15 @@ const Category = () => {
             {!isUpdate ? (
               <>
                 <Link href={`/input-harian/${date}`} className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
-                <button className="p-2 bg-[#E4A11B] rounded-lg text-white" onClick={() => setIsUpdate(!isUpdate)}>Ubah Data</button>
+                <button className="p-2 bg-[#E4A11B] rounded-lg text-white disabled:opacity-60" onClick={() => setIsUpdate(!isUpdate)} disabled={isVerified}>Ubah Data</button>
               </>
             ) : (
               <>
                 <button className="p-2 bg-transparent border border-white rounded-lg text-white" onClick={handleCancelEdit}>Batal</button>
-                <button className="p-2 bg-[#14A44D] rounded-lg text-white" onClick={() => setShowModal(!showModal)} >Simpan Data</button>
+                <button className="p-2 bg-[#14A44D] rounded-lg text-white" onClick={() => setShowModal(!showModal)}  >Simpan Data</button>
               </>
             )}
-            
+
             {showModalDeleteItem ? <ModalDeleteAdditionalItem setShowModalDelete={setShowModalDeleteItem} item={itemAdditionDelete} setItemAdditionDelete={setItemAdditionDelete} setItemsAddition={setItemsAddition} itemsAddition={itemsAddition} /> : null}
 
             {showModalAddItem ? <ModalAddAdditionalItem setShowModal={setShowModalAddItem} onApproved={handleAdditionalItem} categoryId={categoryId} date={date} itemAdditionUpdate={itemAdditionUpdate} /> : null}

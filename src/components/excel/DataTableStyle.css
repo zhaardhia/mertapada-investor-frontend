@@ -1,0 +1,12 @@
+.export {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.export:hover {
+  background-color: #0056b3;
+}

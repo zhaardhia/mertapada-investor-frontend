@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useSessionUser } from '@/contexts/SessionUserContext';
 import ModalConfirm from '@/components/modals/ModalConfirm';
 import { Alert } from '@/components/Alert';
+import moment from 'moment';
 
 interface AbsenceType {
   id: string;
@@ -22,7 +23,9 @@ const Absen = () => {
   const [absence, setAbsence] = useState<AbsenceType[]>([])
   const [absenceOrigin, setAbsenceOrigin] = useState<AbsenceType[]>([])
   const [isUpdate, setIsUpdate] = useState<boolean>(false)
+  const thisMonth = moment().format("MMMM YYYY")
   const [loading, setLoading] = useState(false)
+  const [isVerified, setIsVerified] = useState<boolean>(true)
   const [alertState, setAlertState] = useState({
     isShow: false,
     type: "success",
@@ -36,6 +39,7 @@ const Absen = () => {
     if (router?.query?.id && router?.query?.date) {
       fetchAbsence()
     }
+    dispatch({ type: "setCurrentPage", payload: "Absen" })
   }, [date, id])
 
   const fetchAbsence = async () => {
@@ -47,10 +51,11 @@ const Absen = () => {
           Authorization: `Bearer ${state?.token}`
         }
       })
-
+      console.log({response})
       if (response?.data?.data) {
-        setAbsence(response?.data?.data)
-        setAbsenceOrigin(response?.data?.data)
+        setAbsence(response?.data?.data?.absence)
+        setAbsenceOrigin(response?.data?.data?.absence)
+        setIsVerified(response.data.data.isVerified)
       }
       setLoading(false)
     } catch (error) {
@@ -58,7 +63,7 @@ const Absen = () => {
       setLoading(false)
     }
   }
-  console.log({absence})
+  console.log({absence, isVerified})
 
   const updateAbsence = (value: any, obj: AbsenceType) => {
     setAbsence(current => 
@@ -118,7 +123,7 @@ const Absen = () => {
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
-        <p className='text-2xl text-start mx-auto'>Silahkan Input Data Hari Ini (30 Juli 2023)</p>
+        <p className='text-2xl text-start mx-auto'>Silahkan Input Data Hari Ini ({date} {thisMonth})</p>
         <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white">Absen</p>
           <div className="flex flex-col gap-4 h-[18rem] overflow-y-scroll">
@@ -146,7 +151,7 @@ const Absen = () => {
             {!isUpdate ? (
               <>
                 <Link href={`/input-harian/${date}/final-category`} className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
-                <button className="p-2 bg-[#E4A11B] rounded-lg text-white" onClick={() => setIsUpdate(!isUpdate)}>Ubah Data</button>
+                <button className="p-2 bg-[#E4A11B] rounded-lg text-white disabled:opacity-60" onClick={() => setIsUpdate(!isUpdate)} disabled={isVerified}>Ubah Data</button>
               </>
             ) : (
               <>

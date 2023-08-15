@@ -17,18 +17,27 @@
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
+    "file-saver": "^2.0.5",
     "framer-motion": "^10.13.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
     "nanoid": "^4.0.2",
     "next": "13.4.10",
     "postcss": "8.4.26",
     "react": "18.2.0",
+    "react-data-table-component": "^7.5.3",
+    "react-data-table-component-extensions": "^1.6.0",
     "react-dom": "18.2.0",
     "react-number-format": "^5.2.2",
     "react-select": "^5.7.2",
     "react-spinners": "^0.13.8",
     "tailwindcss": "3.3.3",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/file-saver": "^2.0.5"
   }
 }

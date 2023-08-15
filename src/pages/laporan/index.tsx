@@ -1,14 +1,18 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import Layout from '@/components/Layout'
 import Link from 'next/link'
 import { useRouter } from 'next/router';
+import { createPDF } from '@/utils/util';
+
 const Laporan = () => {
   const router = useRouter();
   const { date } = router.query;
   const category: Array<string> = ["Lauk - pauk", "Bumbu - bumbuan", "Sembako - Minuman", "Lain - Lain"]
+  const pdfContainerRef = useRef<HTMLDivElement>(null);
+
   return (
     <Layout>
-      <div className="flex flex-col gap-10 mt-10">
+      <div className="flex flex-col gap-10 mt-10" ref={pdfContainerRef} id="pdf">
         <p className='text-2xl text-start mx-auto'>Laporan Laba/Rugi (Juli 2023)</p>
         <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white text-center">Rekapitulasi</p>
@@ -24,7 +28,7 @@ const Laporan = () => {
               ">
                 <div className="flex w-5 items-center justify-center">
                   <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
-                  group-open:rotate-90 transition-transform origin-left
+                  group-open:rotate-90 transition-transform origin-left group-open:mb-1
                   "></div>
                 </div>
                 <div className="flex justify-between items-center sm:w-[95%] w-[90%] sm:text-base text-sm">
@@ -61,7 +65,7 @@ const Laporan = () => {
               ">
                 <div className="flex w-5 items-center justify-center">
                   <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
-                  group-open:rotate-90 transition-transform origin-left
+                  group-open:rotate-90 transition-transform origin-left group-open:mb-1
                   "></div>
                 </div>
                 <div className="flex justify-between items-center sm:w-[95%] w-[90%] sm:text-base text-sm">
@@ -87,9 +91,13 @@ const Laporan = () => {
             </div>
           </div>
           
-          <div className="sm:text-base text-sm text-white">
+          <div className="sm:text-base text-sm text-white px-1">
             <div className="flex sm:flex-row flex-col justify-between">
               <p>Bagi hasil untuk investor (50%):</p>
+              <p>Rp xxx.xxx</p>
+            </div>
+            <div className="flex sm:flex-row flex-col justify-between mt-3">
+              <p>Bagi hasil untuk pengelola (50%):</p>
               <p>Rp xxx.xxx</p>
             </div>
             <hr className="my-2" />
@@ -107,7 +115,7 @@ const Laporan = () => {
             ">
               <div className="flex w-5 items-center justify-center">
                 <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
-                group-open:rotate-90 transition-transform origin-left
+                group-open:rotate-90 transition-transform origin-left group-open:mb-1
                 "></div>
               </div>
               <div className="flex justify-between items-center sm:w-[95%] w-[90%] sm:text-base text-sm">
@@ -133,7 +141,12 @@ const Laporan = () => {
             </div>
           </details>
           <div className="text-white flex justify-end gap-2 w-[70%] ml-[30%]">
-            <a className="p-2 bg-[#3B71CA] rounded-lg text-white">Download Excel</a>
+            {/* <button className="p-2 bg-[#3B71CA] rounded-lg text-white"
+              onClick={() => createPDF(pdfContainerRef.current)}
+            >Download PDF</button> */}
+            <Link className="p-2 bg-[#3B71CA] rounded-lg text-white"
+              href={`/laporan/01`}
+            >Rincian</Link>
             <Link href={`/home`} className="p-2 bg-[#14A44D] rounded-lg text-white">Kembali</Link>
           </div>
         </div>

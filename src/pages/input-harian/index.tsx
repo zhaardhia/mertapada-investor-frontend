@@ -2,7 +2,8 @@ import React, { FC, useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import Link from 'next/link';
 import { useSessionUser } from '@/contexts/SessionUserContext'
-
+import Image from 'next/image';
+import { Icon } from '@iconify/react';
 interface DateMonthTypes {
   status: string;
   date: string;
@@ -16,6 +17,7 @@ const InputHarian: FC = () => {
 
   useEffect(() => {
     fetchAllDates()
+    dispatch({ type: "setCurrentPage", payload: "Data Harian"})
   }, [])
 
   const fetchAllDates = async () => {
@@ -36,7 +38,11 @@ const InputHarian: FC = () => {
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
-        <p className='text-2xl text-start mx-auto'>Silahkan Pilih Tanggal Laporan</p>
+        <div className="flex flex-col items-center gap-3">
+          {/* <Image src="/icon-brand.png" alt={'warteg kharisma bahari'} width={100} height={100} /> */}
+          <Icon icon="clarity:date-line" className="text-7xl" />
+          <p className='text-2xl text-start mx-auto'>Silahkan Pilih Tanggal Laporan</p>
+        </div>
         <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white">Juni, 2023</p>
           <div className="grid sm:grid-cols-5 grid-cols-4 sm:gap-4 gap-2">

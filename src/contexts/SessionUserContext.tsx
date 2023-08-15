@@ -45,11 +45,17 @@ function sessionUserReducer(state: any, action: { type: string; payload: any; })
         isLoggedIn: action.payload
       }
     }
+    case "setCurrentPage": {
+      return {
+        ...state,
+        currentPage: action.payload
+      }
+    }
   }
 }
 
 export function SessionUserProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(sessionUserReducer, { token: "", expire: "", userInfo: {}, isLoggedIn: false })
+  const [state, dispatch] = useReducer(sessionUserReducer, { token: "", expire: "", userInfo: {}, isLoggedIn: false, currentPage: "" })
   const router = useRouter()
 
   const axiosJWT = axios.create()

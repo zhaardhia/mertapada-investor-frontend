@@ -6,19 +6,21 @@ import { useSessionUser } from '@/contexts/SessionUserContext';
 import Link from 'next/link';
 import ModalConfirm from '@/components/modals/ModalConfirm';
 import { Alert } from '@/components/Alert';
+import moment from 'moment';
 
 interface OmsetType {
   id: string;
   main_profit: number;
   other_profit: number;
   gross_profit: number;
+  isVerified: boolean;
 }
 
 const Omset = () => {
   const router = useRouter();
   const { date, id } = router.query;
   const { state, axiosJWT, refreshToken, dispatch } = useSessionUser()
-
+  const thisMonth = moment().format("MMMM YYYY")
   const [omset, setOmset] = useState<OmsetType>()
   const [mainProfit, setMainProfit] = useState<number>()
   const [otherProfit, setOtherProfit] = useState<number>()
@@ -37,6 +39,7 @@ const Omset = () => {
     if (router?.query?.id && router?.query?.date) {
       fetchOmset()
     }
+    dispatch({ type: "setCurrentPage", payload: "Omset" })
   }, [date, id])
 
   const fetchOmset = async () => {
@@ -48,7 +51,7 @@ const Omset = () => {
           Authorization: `Bearer ${state?.token}`
         }
       })
-
+      
       if (response?.data?.data) {
         setOmset(response?.data?.data)
         setMainProfit(response.data.data.main_profit > 0 && response.data.data.main_profit)
@@ -105,7 +108,7 @@ const Omset = () => {
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
-        <p className='text-2xl text-start mx-auto'>Silahkan Input Data Hari Ini (30 Juli 2023)</p>
+        <p className='text-2xl text-start mx-auto'>Silahkan Input Data Hari Ini ({date} {thisMonth})</p>
         <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white">Omset</p>
           <div className="flex flex-col gap-4 h-[18rem]">
@@ -158,7 +161,7 @@ const Omset = () => {
             {!isUpdate ? (
               <>
                 <Link href={`/input-harian/${date}/final-category`} className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
-                <button className="p-2 bg-[#E4A11B] rounded-lg text-white" onClick={() => setIsUpdate(!isUpdate)}>Ubah Data</button>
+                <button className="p-2 bg-[#E4A11B] rounded-lg text-white disabled:opacity-60" onClick={() => setIsUpdate(!isUpdate)} disabled={omset?.isVerified}>Ubah Data</button>
               </>
             ) : (
               <>
