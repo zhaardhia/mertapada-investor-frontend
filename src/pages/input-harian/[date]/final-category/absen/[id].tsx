@@ -123,7 +123,7 @@ const Absen = () => {
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
-        <p className='text-2xl text-start mx-auto'>Silahkan Input Data Hari Ini ({date} {thisMonth})</p>
+        <p className='text-2xl text-center mx-auto'>Silahkan Input Data Hari Ini ({date} {thisMonth})</p>
         <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white">Absen</p>
           <div className="flex flex-col gap-4 h-[18rem] overflow-y-scroll">

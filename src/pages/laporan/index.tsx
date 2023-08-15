@@ -13,7 +13,7 @@ const Laporan = () => {
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10" ref={pdfContainerRef} id="pdf">
-        <p className='text-2xl text-start mx-auto'>Laporan Laba/Rugi (Juli 2023)</p>
+        <p className='text-2xl text-center mx-auto'>Laporan Laba/Rugi (Juli 2023)</p>
         <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white text-center">Rekapitulasi</p>
           <div className="flex flex-col gap-4">

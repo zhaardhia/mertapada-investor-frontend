@@ -98,7 +98,7 @@ const Date = () => {
       <div className="flex flex-col gap-10 mt-10">
         <div className="flex flex-col items-center gap-3">
           <Icon icon="mdi:file-report-outline" className="text-7xl" />
-          <p className='text-2xl text-start mx-auto'>Data Pengeluaran ({date} {thisMonth})</p>
+          <p className='text-2xl text-center mx-auto'>Data Pengeluaran ({date} {thisMonth})</p>
         </div>
         <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white text-center">Pilih Kategori Data</p>

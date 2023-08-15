@@ -110,7 +110,7 @@ const FinalCategory = () => {
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
-        <p className='text-2xl text-start mx-auto'>Data Omset & Absen ({date} {thisMonth})</p>
+        <p className='text-2xl text-center mx-auto'>Data Omset & Absen ({date} {thisMonth})</p>
         <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5 h-[30rem]">
           <p className="text-2xl text-white text-center">Pilih Kategori Data</p>
           <div className="flex flex-col">

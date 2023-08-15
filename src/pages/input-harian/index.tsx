@@ -41,7 +41,7 @@ const InputHarian: FC = () => {
         <div className="flex flex-col items-center gap-3">
           {/* <Image src="/icon-brand.png" alt={'warteg kharisma bahari'} width={100} height={100} /> */}
           <Icon icon="clarity:date-line" className="text-7xl" />
-          <p className='text-2xl text-start mx-auto'>Silahkan Pilih Tanggal Laporan</p>
+          <p className='text-2xl mx-auto text-center'>Silahkan Pilih Tanggal Laporan</p>
         </div>
         <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white">Juni, 2023</p>

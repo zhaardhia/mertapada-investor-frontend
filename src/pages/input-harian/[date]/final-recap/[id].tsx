@@ -73,9 +73,9 @@ const FinalRecapDetail = () => {
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10 text-black">
-        <p className='text-2xl text-start mx-auto'>Silahkan Input Data Hari Ini ({date} {thisMonth})</p>
+        {/* <p className='text-2xl text-start mx-auto'>Silahkan Input Data Hari Ini ({date} {thisMonth})</p> */}
         <div className="bg-[#85a476] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
-          <p className="text-2xl text-white text-center">Rekap Akhir Data</p>
+          <p className="text-2xl text-white text-center">Rekap Akhir Data ({date} {thisMonth})</p>
           <div className="flex justify-around">
             <button className={`p-2 bg-transparent border rounded-lg text-white ${tabSwitch === "dataBelanja" && "border-slate-400"}`}
               onClick={() => setTabSwitch('dataBelanja')}
