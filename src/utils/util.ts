@@ -1,5 +1,6 @@
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
+import moment from "moment";
 
 export const objCategory = [
   {
@@ -72,3 +73,14 @@ export const createPDF = async (pdfContainerRef: HTMLDivElement) => {
       pdf.addImage(img, 'PNG', 10, 10, 290, 680);
       pdf.save('exported-document.pdf');
 };
+
+export const getMonthReport = () => {
+  const arrayMonth = []
+  for (let i = 0; i < 6; i++) {
+    const month = moment().subtract(i, 'month')
+    arrayMonth.push(
+      { label: month.format("MMMM YYYY"), value: month.format("YYYY-MM") }
+    )
+  }
+  return arrayMonth
+}

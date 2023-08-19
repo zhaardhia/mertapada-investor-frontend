@@ -48,7 +48,7 @@ const Date = () => {
     try {
       setLoading(true)
       
-      const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/check-category?date=${date}`, {
+      const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report-investor/check-category?date=${date}`, {
         headers: {
           Authorization: `Bearer ${state?.token}`
         }
@@ -100,7 +100,7 @@ const Date = () => {
           <Icon icon="mdi:file-report-outline" className="text-7xl" />
           <p className='text-2xl text-center mx-auto'>Data Pengeluaran ({date} {thisMonth})</p>
         </div>
-        <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
+        <div className="bg-[#2D4356] rounded-2xl  sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white text-center">Pilih Kategori Data</p>
           <div className="flex flex-col gap-4">
             {checkCategory.map((category: CheckCategoryType) => {

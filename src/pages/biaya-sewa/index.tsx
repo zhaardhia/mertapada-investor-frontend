@@ -12,6 +12,7 @@ import ModalConfirm from '@/components/modals/ModalConfirm';
 import ModalConfirmDelete from '@/components/modals/ModalConfirmDelete';
 import { NumericFormat } from 'react-number-format';
 import { Alert } from '@/components/Alert';
+import moment from 'moment';
 
 const BiayaSewa = () => {
   const router = useRouter();
@@ -157,8 +158,8 @@ const BiayaSewa = () => {
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
-        <p className='text-2xl text-center mx-auto'>Pengaturan Biaya Sewa untuk Bulan Ini (Juli 2023)</p>
-        <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
+        <p className='text-2xl text-center mx-auto'>Pengaturan Biaya Sewa untuk Bulan Ini ({moment().format("MMMM YYYY")})</p>
+        <div className="bg-[#2D4356] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white">Biaya Sewa</p>
           <div className="flex flex-col gap-4 h-[18rem] overflow-y-scroll">
             {biayaSewa?.map((sewa) => {

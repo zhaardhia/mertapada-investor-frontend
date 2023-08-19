@@ -40,7 +40,7 @@ const FinalRecap = () => {
       setLoading(true)
       // const categoryId: string = currentCategory.id ? currentCategory.id : findCategoryShopExpense(categoryShop)
       
-      const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/final-recap?date=${date}`, {
+      const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report-investor/final-recap?date=${date}`, {
         headers: {
           Authorization: `Bearer ${state?.token}`
         }
@@ -60,8 +60,8 @@ const FinalRecap = () => {
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
-        <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
-          <p className="text-2xl text-white text-center">Rekap Akhir Data {date} {thisMonth}</p>
+        <div className="bg-[#2D4356] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
+          <p className="text-2xl text-white text-center">Rekap Akhir Data <br /> {moment(date).format("DD MMMM YYYY")}</p>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col">
               <div className="flex justify-between mt-4 mb-4">

@@ -14,6 +14,7 @@ interface OmsetType {
   other_profit: number;
   gross_profit: number;
   isVerified: boolean;
+  isEditable: boolean;
 }
 
 const Omset = () => {
@@ -46,7 +47,7 @@ const Omset = () => {
     try {
       setLoading(true)
       
-      const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/omset?date=${date}&id=${id}`, {
+      const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report-investor/omset?date=${date}&id=${id}`, {
         headers: {
           Authorization: `Bearer ${state?.token}`
         }
@@ -109,7 +110,7 @@ const Omset = () => {
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
         <p className='text-2xl text-center mx-auto'>Silahkan Input Data Hari Ini ({date} {thisMonth})</p>
-        <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
+        <div className="bg-[#2D4356] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white">Omset</p>
           <div className="flex flex-col gap-4 h-[18rem]">
             <div className="flex flex-col">
@@ -161,7 +162,9 @@ const Omset = () => {
             {!isUpdate ? (
               <>
                 <Link href={`/input-harian/${date}/final-category`} className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
-                <button className="p-2 bg-[#E4A11B] rounded-lg text-white disabled:opacity-60" onClick={() => setIsUpdate(!isUpdate)} disabled={omset?.isVerified}>Ubah Data</button>
+                {omset?.isEditable && (
+                  <button className="p-2 bg-[#E4A11B] rounded-lg text-white disabled:opacity-60" onClick={() => setIsUpdate(!isUpdate)} disabled={omset?.isVerified}>Ubah Data</button>
+                )}
               </>
             ) : (
               <>

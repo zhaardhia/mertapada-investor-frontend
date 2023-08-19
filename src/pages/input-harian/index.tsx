@@ -4,25 +4,37 @@ import Link from 'next/link';
 import { useSessionUser } from '@/contexts/SessionUserContext'
 import Image from 'next/image';
 import { Icon } from '@iconify/react';
+import Select, { ActionMeta, SingleValue } from 'react-select';
+import moment from 'moment';
+import { MonthSelect } from '@/types/dates';
+import { getMonthReport } from '@/utils/util';
+
 interface DateMonthTypes {
   status: string;
   date: string;
+  isDisabled: boolean;
+  fullDate: string;
 }
+type Option = { value: string; label: string };
+
 const InputHarian: FC = () => {
   const tanggal: Array<string> = ["01", "02" , "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]; // example day of month
   const { state, axiosJWT, refreshToken, dispatch } = useSessionUser()
 
 
   const [allDates, setAllDates] = useState<DateMonthTypes[]>()
+  const [monthOptions, setMonthOptions] = useState<MonthSelect[]>()
+  const [selectedMonth, setSelectedMonth] = useState<Option | null>({label: moment().format("MMMM YYYY"), value: moment().format("YYYY-MM")})
 
   useEffect(() => {
     fetchAllDates()
     dispatch({ type: "setCurrentPage", payload: "Data Harian"})
-  }, [])
+    setMonthOptions(getMonthReport())
+  }, [selectedMonth])
 
   const fetchAllDates = async () => {
     try {
-      const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/date-in-month`, {
+      const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report-investor/date-in-month?monthYear=${selectedMonth?.value}`, {
         headers: {
           Authorization: `Bearer ${state?.token}`
         }
@@ -35,6 +47,22 @@ const InputHarian: FC = () => {
     }
   }
   console.log({allDates})
+
+  // const handleChangeMonth: (newValue: SingleValue<MonthSelect>, actionMeta: ActionMeta<MonthSelect>) => void = (e: MonthSelect) => {
+    
+  //   if (newValue !== null) {
+  //     // Your logic here using newValue and actionMeta
+  //     console.log({e})
+  //   }
+    
+  // }
+
+  const handleChangeMonth = (newValue: Option | null, actionMeta: ActionMeta<Option>) => {
+    setSelectedMonth(newValue);
+    console.log({newValue})
+  };
+
+  console.log({monthOptions})
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
@@ -43,23 +71,37 @@ const InputHarian: FC = () => {
           <Icon icon="clarity:date-line" className="text-7xl" />
           <p className='text-2xl mx-auto text-center'>Silahkan Pilih Tanggal Laporan</p>
         </div>
-        <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
-          <p className="text-2xl text-white">Juni, 2023</p>
+        <div className="bg-[#2D4356] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
+          <div className="flex justify-between items-center">
+            <p className="text-2xl text-white">{moment(selectedMonth?.value).format("MMMM YYYY")}</p>
+            <Select
+              className="basic-single sm:w-[50%] w-full rounded-xl"
+              classNamePrefix="select"
+              defaultValue={ selectedMonth }
+              // isLoading={isLoading}
+              value={selectedMonth}
+              isClearable={false}
+              isSearchable={true}
+              name="courier"
+              options={monthOptions}
+              placeholder="Pilih Bulan & Tahun"
+              onChange={handleChangeMonth}
+              // disabled={!id}
+            />
+          </div>
           <div className="grid sm:grid-cols-5 grid-cols-4 sm:gap-4 gap-2">
             {allDates?.map((tgl: DateMonthTypes, idx) => {
               return (
-                allDates[idx - 1]?.status === "verified" || tgl.status === "verified" ?
-                <Link href={`input-harian/${tgl.date}`} 
+                !tgl.isDisabled ?
+                <Link href={`input-harian/${tgl.fullDate}`} 
                   className={`sm:p-2 p-1 
-                    ${tgl.status === "verified" ? "bg-[#14A44D] text-white" : 
-                      (tgl.status === "filled" || tgl.status === "empty") && allDates[idx - 1].status === "verified" ? "bg-[#FFF8D6]" 
-                      : "bg-[#FFF8D6] opacity-60"}  
+                    ${tgl.status === "verified" ? "bg-[#14A44D] text-white" : "bg-[#FFF8D6]"}  
                     hover:bg-[#f5eecc] rounded-lg text-center`
                   }
                 >
                   {tgl?.date}
                 </Link>
-                : <button disabled className="sm:p-2 p-1 bg-[#FFF8D6] opacity-60 rounded-lg text-center">{tgl?.date}</button>
+                : <button disabled className="sm:p-2 p-1 bg-[#FFF8D6] opacity-40 rounded-lg text-center">{tgl?.date}</button>
               )
             })}
           </div>

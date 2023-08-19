@@ -26,6 +26,7 @@ const Absen = () => {
   const thisMonth = moment().format("MMMM YYYY")
   const [loading, setLoading] = useState(false)
   const [isVerified, setIsVerified] = useState<boolean>(true)
+  const [isEditable, setIsEditable] = useState<boolean>(true)
   const [alertState, setAlertState] = useState({
     isShow: false,
     type: "success",
@@ -46,7 +47,7 @@ const Absen = () => {
     try {
       setLoading(true)
       
-      const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/absence?date=${date}&id=${id}`, {
+      const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report-investor/absence?date=${date}&id=${id}`, {
         headers: {
           Authorization: `Bearer ${state?.token}`
         }
@@ -56,6 +57,7 @@ const Absen = () => {
         setAbsence(response?.data?.data?.absence)
         setAbsenceOrigin(response?.data?.data?.absence)
         setIsVerified(response.data.data.isVerified)
+        setIsEditable(response?.data?.data?.isEditable)
       }
       setLoading(false)
     } catch (error) {
@@ -72,7 +74,7 @@ const Absen = () => {
       )
     );
   }
-
+  console.log({isEditable})
   const handleApproved = async () => {
     let verifDailyReport = null;
     try {
@@ -124,7 +126,7 @@ const Absen = () => {
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
         <p className='text-2xl text-center mx-auto'>Silahkan Input Data Hari Ini ({date} {thisMonth})</p>
-        <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
+        <div className="bg-[#2D4356] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white">Absen</p>
           <div className="flex flex-col gap-4 h-[18rem] overflow-y-scroll">
             {absence?.map((absen: AbsenceType) => {

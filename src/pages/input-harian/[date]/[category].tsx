@@ -57,11 +57,13 @@ const Category = () => {
   const [showModalDeleteItem, setShowModalDeleteItem] = useState<boolean>(false)
 
   const [categoryId, setCategoryId] = useState<any>(findCategoryShopExpense(categoryShop))
-
+  const [categoryShopId, setCategoryShopId] = useState<string | undefined>(categoryShop?.split(" ").join(""))
+  console.log({categoryShop})
   const [itemAdditionUpdate, setItemAdditionUpdate] = useState<itemShop | null>()
   const [itemAdditionDelete, setItemAdditionDelete] = useState<itemShop>()
 
   const [isVerified, setIsVerified] = useState<boolean>(true)
+  const [isEditable, setIsEditable] = useState<boolean>(true)
 
   React.useEffect(() => {
     if (router?.query?.date) {
@@ -70,13 +72,14 @@ const Category = () => {
     }
     dispatch({ type: "setCurrentPage", payload: categoryShop})
   }, [router?.query?.date])
+
   console.log({categoryShop}, typeof(categoryShop))
   const fetchShopItem = async () => {
     try {
       setLoading(true)
       const categoryId: string = currentCategory.id ? currentCategory.id : findCategoryShopExpense(categoryShop)
       
-      const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/item-shopped-by-category?date=${date}&category=${categoryId}`, {
+      const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report-investor/item-shopped-by-category?date=${date}&category=${categoryId}`, {
         headers: {
           Authorization: `Bearer ${state?.token}`
         }
@@ -93,6 +96,7 @@ const Category = () => {
         setItemsAddition(additionalItem)
         setItemsAdditionOrigin(additionalItem)
         setIsVerified(response.data.data.isVerified)
+        setIsEditable(response.data.data.isEditable)
       }
       setLoading(false)
     } catch (error) {
@@ -137,9 +141,9 @@ const Category = () => {
   }
 
   const handleAddOrUpdateItemApproved = async () => {
-    console.log([...items, ...itemsAddition])
+    console.log([...items, ...itemsAddition], {date})
     try {
-      const postItems = await axiosJWT.post(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/item-shopped-by-category`, 
+      const postItems = await axiosJWT.post(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report-investor/item-shopped-by-category`, 
         {
           date: date,
           item_shop: [...items, ...itemsAddition]
@@ -186,7 +190,7 @@ const Category = () => {
           <Icon icon="mdi:file-report-outline" className="text-7xl" />
           <p className='text-2xl text-center mx-auto'>Silahkan Input Data Pengeluaran ({date} {thisMonth})</p>
         </div>
-        <div className="bg-[#617A55] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
+        <div className="bg-[#2D4356] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white">{categoryShop}</p>
           <div className="flex flex-col gap-4 h-[32rem] overflow-y-scroll pr-5">
             {items?.map((item: itemShop) => {
@@ -284,7 +288,7 @@ const Category = () => {
                             </button>
                             
                         )
-                      : (
+                      : isEditable && (
                           <button 
                             className="text-white bg-red-600 w-full mx-auto rounded-lg shadow-lg p-2 disabled:opacity-75"
                             onClick={() => {
@@ -324,7 +328,9 @@ const Category = () => {
             {!isUpdate ? (
               <>
                 <Link href={`/input-harian/${date}`} className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
-                <button className="p-2 bg-[#E4A11B] rounded-lg text-white disabled:opacity-60" onClick={() => setIsUpdate(!isUpdate)} disabled={isVerified}>Ubah Data</button>
+                {isEditable && (
+                  <button className="p-2 bg-[#E4A11B] rounded-lg text-white disabled:opacity-60" onClick={() => setIsUpdate(!isUpdate)} disabled={isVerified}>Ubah Data</button>
+                )}
               </>
             ) : (
               <>

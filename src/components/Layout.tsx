@@ -28,7 +28,7 @@ const Layout: FC<Child> = ({ children }) => {
         // height: '100%',
       }}
     >
-      <div className="bg-[#617A55] rounded-2xl w-full p-5 text-white text-center">
+      <div className="bg-[#2D4356] rounded-2xl w-full p-5 text-white text-center">
         <p>Halaman {state?.currentPage || "Utama"}</p>
       </div>
       {/* <Nav /> */}
