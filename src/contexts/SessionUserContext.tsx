@@ -85,7 +85,7 @@ export function SessionUserProvider({ children }: { children: ReactNode }) {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/user-pengelola/token`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/user-investor/token`, {
         withCredentials: true,
         headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}
       })
