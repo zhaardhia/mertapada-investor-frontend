@@ -25,7 +25,7 @@ export default function Home() {
     console.log(process.env.NEXT_PUBLIC_BASE_URL);
     try {
       // axios.defaults.withCredentials = true
-      await axios.post(
+      const login = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/v1/user-investor/login-user`,
         {
           username,
@@ -36,6 +36,12 @@ export default function Home() {
           headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json" },
         }
       );
+      console.log({login})
+      const expires = new Date();
+      expires.setTime(expires.getTime() + 1 + 24 * 60 * 60 * 1000);
+      const cookie = `${"refreshToken"}=${login?.data?.data?.refreshToken};expires=${expires.toUTCString()}`;
+      console.log({cookie})
+      document.cookie = cookie;
       setMsgError('');
       refreshToken()
       router.push("/home");
