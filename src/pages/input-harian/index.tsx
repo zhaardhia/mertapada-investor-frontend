@@ -8,6 +8,8 @@ import Select, { ActionMeta, SingleValue } from 'react-select';
 import moment from 'moment';
 import { MonthSelect } from '@/types/dates';
 import { getMonthReport } from '@/utils/util';
+import { BounceLoader } from "react-spinners";
+import dynamic from 'next/dynamic';
 
 interface DateMonthTypes {
   status: string;
@@ -25,6 +27,7 @@ const InputHarian: FC = () => {
   const [allDates, setAllDates] = useState<DateMonthTypes[]>()
   const [monthOptions, setMonthOptions] = useState<MonthSelect[]>()
   const [selectedMonth, setSelectedMonth] = useState<Option | null>({label: moment().format("MMMM YYYY"), value: moment().format("YYYY-MM")})
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     fetchAllDates()
@@ -34,6 +37,7 @@ const InputHarian: FC = () => {
 
   const fetchAllDates = async () => {
     try {
+      setLoading(true)
       const response = await axiosJWT.get(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report-investor/date-in-month?monthYear=${selectedMonth?.value}`, {
         headers: {
           Authorization: `Bearer ${state?.token}`
@@ -45,6 +49,7 @@ const InputHarian: FC = () => {
     } catch (error) {
       console.error(error)
     }
+    setLoading(false)
   }
   console.log({allDates})
 
@@ -89,6 +94,7 @@ const InputHarian: FC = () => {
               // disabled={!id}
             />
           </div>
+          <BounceLoader className="mx-auto" loading={loading} color="#e5f3f0" />
           <div className="grid sm:grid-cols-5 grid-cols-4 sm:gap-4 gap-2">
             {allDates?.map((tgl: DateMonthTypes, idx) => {
               return (
@@ -115,4 +121,6 @@ const InputHarian: FC = () => {
   )
 }
 
-export default InputHarian
+export default dynamic(() => Promise.resolve(InputHarian), {
+  ssr: false,
+})

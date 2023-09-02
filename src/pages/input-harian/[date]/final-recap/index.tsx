@@ -6,6 +6,7 @@ import { useDataLaporan } from '../../../../contexts/DataLaporanContext'
 import { useSessionUser } from '../../../../contexts/SessionUserContext'
 import { formatRupiah } from '@/utils/util';
 import moment from 'moment';
+import dynamic from 'next/dynamic';
 
 interface FinalRecapType {
   id: string;
@@ -112,4 +113,6 @@ const FinalRecap = () => {
   )
 }
 
-export default FinalRecap
+export default dynamic(() => Promise.resolve(FinalRecap), {
+  ssr: false,
+})

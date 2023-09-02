@@ -6,6 +6,7 @@ import { useSessionUser } from '../../../../contexts/SessionUserContext'
 import ModalConfirmFinal from '@/components/modals/ModalConfirmFinal';
 import { Alert } from '@/components/Alert';
 import moment from 'moment';
+import dynamic from 'next/dynamic';
 
 interface FinalCategoryStatusType {
   daily_report_id: string;
@@ -68,7 +69,7 @@ const FinalCategory = () => {
   const handleApproved = async () => {
     let verifFinal = null;
     try {
-      verifFinal = await axiosJWT.put(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/verify-final`, 
+      verifFinal = await axiosJWT.put(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report-investor/verify-final`, 
         {
           id: omsetAndAbsence?.daily_report_id,
           date,
@@ -167,4 +168,6 @@ const FinalCategory = () => {
   )
 }
 
-export default FinalCategory
+export default dynamic(() => Promise.resolve(FinalCategory), {
+  ssr: false,
+})

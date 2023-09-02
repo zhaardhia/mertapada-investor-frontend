@@ -16,11 +16,7 @@
     "@types/react-select": "^5.0.1",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
-    "date-fns": "^2.30.0",
-    "file-saver": "^2.0.5",
     "framer-motion": "^10.13.0",
-    "html2canvas": "^1.4.1",
-    "jspdf": "^2.5.1",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
     "nanoid": "^4.0.2",
@@ -34,10 +30,6 @@
     "react-select": "^5.7.2",
     "react-spinners": "^0.13.8",
     "tailwindcss": "3.3.3",
-    "typescript": "5.1.6",
-    "xlsx": "^0.18.5"
-  },
-  "devDependencies": {
-    "@types/file-saver": "^2.0.5"
+    "typescript": "5.1.6"
   }
 }

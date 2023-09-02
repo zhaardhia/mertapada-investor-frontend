@@ -7,6 +7,7 @@ import Link from 'next/link';
 import ModalConfirm from '@/components/modals/ModalConfirm';
 import { Alert } from '@/components/Alert';
 import moment from 'moment';
+import dynamic from 'next/dynamic';
 
 interface OmsetType {
   id: string;
@@ -69,7 +70,7 @@ const Omset = () => {
   const handleApproved = async () => {
     let verifDailyReport = null;
     try {
-      verifDailyReport = await axiosJWT.post(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/omset`, 
+      verifDailyReport = await axiosJWT.post(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report-investor/omset`, 
         {
           id,
           date,
@@ -163,7 +164,7 @@ const Omset = () => {
               <>
                 <Link href={`/input-harian/${date}/final-category`} className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
                 {omset?.isEditable && (
-                  <button className="p-2 bg-[#E4A11B] rounded-lg text-white disabled:opacity-60" onClick={() => setIsUpdate(!isUpdate)} disabled={omset?.isVerified}>Ubah Data</button>
+                  <button className="p-2 bg-[#E4A11B] rounded-lg text-white disabled:opacity-60" onClick={() => setIsUpdate(!isUpdate)} disabled={!omset?.isEditable}>Ubah Data</button>
                 )}
               </>
             ) : (
@@ -196,4 +197,6 @@ const Omset = () => {
   )
 }
 
-export default Omset
+export default dynamic(() => Promise.resolve(Omset), {
+  ssr: false,
+})

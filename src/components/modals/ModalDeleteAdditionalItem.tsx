@@ -15,9 +15,10 @@ interface ModalDeleteAdditionalItemType {
   item: itemShop | undefined;
   setItemsAddition: React.Dispatch<React.SetStateAction<itemShop[] | []>>;
   itemsAddition: itemShop[];
+  date: string | undefined;
 }
 
-const ModalDeleteAdditionalItem: React.FC<ModalDeleteAdditionalItemType> = ({ setShowModalDelete, item, setItemAdditionDelete, setItemsAddition, itemsAddition }) => {
+const ModalDeleteAdditionalItem: React.FC<ModalDeleteAdditionalItemType> = ({ setShowModalDelete, item, setItemAdditionDelete, setItemsAddition, itemsAddition, date }) => {
   const { axiosJWT, state } = useSessionUser()
   const [msgError, setMsgError] = useState<string | undefined>()
   const [msgSuccess, setMsgSuccess] = useState<string | undefined>()
@@ -26,7 +27,8 @@ const ModalDeleteAdditionalItem: React.FC<ModalDeleteAdditionalItemType> = ({ se
     try {
       const deleteItems = await axiosJWT.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/item-shopped-by-category`, {
         data: {
-          id: item?.id
+          id: item?.id,
+          date: date
         },
           withCredentials: true,
           headers: {

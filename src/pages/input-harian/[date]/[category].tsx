@@ -12,6 +12,8 @@ import { formatRupiah, findCategoryShopExpense } from '@/utils/util';
 import moment from 'moment';
 import 'moment/locale/id';  // Import the Indonesian locale
 import { Icon } from '@iconify/react';
+import dynamic from 'next/dynamic';
+import { BounceLoader } from 'react-spinners';
 // import { itemShop } from '@/types/laporan';
 
 moment.locale('id');
@@ -39,7 +41,7 @@ const Category = () => {
   // const { myValue } = router.query as MyQuery;
 
 
-  const thisMonth = moment().format("MMMM YYYY")  
+  const thisMonth = moment(date).format("D MMMM YYYY")  
   const { state, axiosJWT, refreshToken, dispatch } = useSessionUser()
   const { state: stateLaporan, dispatch: dispatchLaporan } = useDataLaporan()
   const currentCategory = stateLaporan?.currentCategory
@@ -64,7 +66,7 @@ const Category = () => {
 
   const [isVerified, setIsVerified] = useState<boolean>(true)
   const [isEditable, setIsEditable] = useState<boolean>(true)
-
+  console.log({isEditable})
   React.useEffect(() => {
     if (router?.query?.date) {
       fetchShopItem()
@@ -143,6 +145,7 @@ const Category = () => {
   const handleAddOrUpdateItemApproved = async () => {
     console.log([...items, ...itemsAddition], {date})
     try {
+      setLoading(true)
       const postItems = await axiosJWT.post(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report-investor/item-shopped-by-category`, 
         {
           date: date,
@@ -165,6 +168,7 @@ const Category = () => {
     } catch (error) {
       console.error(error)
     }
+    setLoading(false)
   }
 
   const handleAdditionalItem = (item: itemShop): void => {
@@ -188,10 +192,11 @@ const Category = () => {
       <div className="flex flex-col gap-10 mt-10">
         <div className="flex flex-col items-center gap-3">
           <Icon icon="mdi:file-report-outline" className="text-7xl" />
-          <p className='text-2xl text-center mx-auto'>Silahkan Input Data Pengeluaran ({date} {thisMonth})</p>
+          <p className='text-2xl text-center mx-auto'>Silahkan Input Data Pengeluaran ({thisMonth})</p>
         </div>
         <div className="bg-[#2D4356] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white">{categoryShop}</p>
+          <BounceLoader className="mx-auto" loading={loading} color="#e5f3f0" />
           <div className="flex flex-col gap-4 h-[32rem] overflow-y-scroll pr-5">
             {items?.map((item: itemShop) => {
               return (
@@ -204,7 +209,7 @@ const Category = () => {
                       // prefix={'Rp'}
                       fixedDecimalScale={true}
                       allowNegative={false}
-                      placeholder="Enter quantity"
+                      placeholder="Jumlah"
                       onValueChange={(values: any) => {
                         const { formattedValue, value } = values;
                         // formattedValue = "$1,234.56", value = "1234.56"
@@ -212,7 +217,7 @@ const Category = () => {
                         addOrUpdateItemQuantity(value, item, "main")
                       }}
                       className={`bg-[#FFF8D6] w-[25%] h-[2rem] rounded-xl p-2 text-center ${!isUpdate && "disabled:opacity-80"}`}
-                      value={item?.quantity}
+                      value={item?.quantity === 0 ? null : item?.quantity}
                       disabled={isUpdate ? false : true}
                     />
                     <input disabled type="text" className="bg-[#FFF8D6] w-[30%] h-[2rem] rounded-xl p-2 text-center disabled:opacity-80" value={item?.unit_type} />
@@ -227,7 +232,7 @@ const Category = () => {
                       // prefix={'Rp'}
                       fixedDecimalScale={true}
                       allowNegative={false}
-                      placeholder="Enter price"
+                      placeholder="Harga"
                       onValueChange={(values: any) => {
                         const { formattedValue, value } = values;
                         // formattedValue = "$1,234.56", value = "1234.56"
@@ -235,8 +240,8 @@ const Category = () => {
                         addOrUpdateItemPrice(value, item, "main")
                       }}
                       className={`bg-[#FFF8D6] w-[40%] h-[2rem] rounded-xl p-2 text-center ${(!item?.quantity || !isUpdate) && "disabled:opacity-80"}`}
-                      value={item?.price}
-                      disabled={item?.quantity && isUpdate ? false : true}
+                      value={item?.price === 0 ? null : item?.price}
+                      disabled={isUpdate ? false : true}
                     />
                   </div>
                   <hr />
@@ -259,7 +264,7 @@ const Category = () => {
                             // prefix={'Rp'}
                             fixedDecimalScale={true}
                             allowNegative={false}
-                            placeholder="Enter quantity"
+                            placeholder="Masukkan Jumlah"
                             className={`bg-[#FFF8D6] w-[25%] h-[2rem] rounded-xl p-2 text-center disabled:opacity-75`}
                             value={itemAddition.quantity}
                             disabled={true}
@@ -270,7 +275,7 @@ const Category = () => {
                             // prefix={'Rp'}
                             fixedDecimalScale={true}
                             allowNegative={false}
-                            placeholder="Enter price"
+                            placeholder="Masukkan Harga"
                             className={`bg-[#FFF8D6] w-[40%] h-[2rem] rounded-xl p-2 text-center disabled:opacity-75`}
                             value={itemAddition.price}
                             disabled={true}
@@ -329,7 +334,7 @@ const Category = () => {
               <>
                 <Link href={`/input-harian/${date}`} className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
                 {isEditable && (
-                  <button className="p-2 bg-[#E4A11B] rounded-lg text-white disabled:opacity-60" onClick={() => setIsUpdate(!isUpdate)} disabled={isVerified}>Ubah Data</button>
+                  <button className="p-2 bg-[#E4A11B] rounded-lg text-white disabled:opacity-60" onClick={() => setIsUpdate(!isUpdate)} disabled={!isEditable}>Ubah Data</button>
                 )}
               </>
             ) : (
@@ -339,7 +344,7 @@ const Category = () => {
               </>
             )}
 
-            {showModalDeleteItem ? <ModalDeleteAdditionalItem setShowModalDelete={setShowModalDeleteItem} item={itemAdditionDelete} setItemAdditionDelete={setItemAdditionDelete} setItemsAddition={setItemsAddition} itemsAddition={itemsAddition} /> : null}
+            {showModalDeleteItem ? <ModalDeleteAdditionalItem setShowModalDelete={setShowModalDeleteItem} item={itemAdditionDelete} setItemAdditionDelete={setItemAdditionDelete} setItemsAddition={setItemsAddition} itemsAddition={itemsAddition} date={date} /> : null}
 
             {showModalAddItem ? <ModalAddAdditionalItem setShowModal={setShowModalAddItem} onApproved={handleAdditionalItem} categoryId={categoryId} date={date} itemAdditionUpdate={itemAdditionUpdate} /> : null}
             {showModal ? <ModalConfirmAddItem setShowModal={setShowModal} onApproved={handleAddOrUpdateItemApproved} /> : null}
@@ -351,4 +356,6 @@ const Category = () => {
   )
 }
 
-export default Category
+export default dynamic(() => Promise.resolve(Category), {
+  ssr: false,
+})

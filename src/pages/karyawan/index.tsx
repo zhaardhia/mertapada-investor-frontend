@@ -157,7 +157,7 @@ const Karyawan: FC = () => {
       <div className="flex flex-col gap-10 mt-10">
         <p className='text-2xl text-center mx-auto'>Pengaturan Gaji Karyawan untuk Bulan Ini ({moment().format("MMMM YYYY")})</p>
         <div className="bg-[#2D4356] rounded-2xl sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
-          <p className="text-2xl text-white">Karyawan & Gaji</p>
+          <p className="text-2xl text-white">Karyawan & Gaji (Perbulan)</p>
           <div className="flex flex-col gap-4 h-[18rem] overflow-y-scroll">
             {employees?.map((employee) => {
               return (

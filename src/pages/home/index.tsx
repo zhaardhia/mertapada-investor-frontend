@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { Icon } from '@iconify/react';
 import { animateFromLeftWithOpacity, animateOpacity } from "@/animations/animation"
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 const index: FC = () => {
   const { state, axiosJWT, refreshToken, dispatch } = useSessionUser()
   const router = useRouter();
@@ -74,6 +75,12 @@ const index: FC = () => {
             <Icon icon="fluent:money-20-regular" className="text-2xl" />
             <p className="text-[0.8rem]">Biaya Sewa</p>
           </Link>
+          {/* <Link href="/biaya-sewa" className="bg-[#435B66] text-white hover:bg-[#4d636e] p-3 rounded-2xl w-[80%] text-center flex flex-col items-center gap-1"
+            onClick={() => dispatch({ type: "setCurrentPage", payload: "Biaya Sewa"})}
+          >
+            <Icon icon="fluent:money-20-regular" className="text-2xl" />
+            <p className="text-[0.8rem]"></p>
+          </Link> */}
         </motion.div>
       </div>
       <div className="flex justify-end my-5">
@@ -86,4 +93,6 @@ const index: FC = () => {
   )
 }
 
-export default index
+export default dynamic(() => Promise.resolve(index), {
+  ssr: false,
+})

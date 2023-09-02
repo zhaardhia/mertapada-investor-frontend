@@ -7,6 +7,7 @@ import { useSessionUser } from '@/contexts/SessionUserContext';
 import ModalConfirm from '@/components/modals/ModalConfirm';
 import { Alert } from '@/components/Alert';
 import moment from 'moment';
+import dynamic from 'next/dynamic';
 
 interface AbsenceType {
   id: string;
@@ -80,7 +81,7 @@ const Absen = () => {
     try {
       const filterIsPresent = absence.filter((absen: AbsenceType) => absen.is_present === true)
       console.log("AKWK")
-      verifDailyReport = await axiosJWT.post(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/absence`, 
+      verifDailyReport = await axiosJWT.post(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report-investor/absence`, 
         {
           absence_item: [...absence],
           date,
@@ -153,7 +154,7 @@ const Absen = () => {
             {!isUpdate ? (
               <>
                 <Link href={`/input-harian/${date}/final-category`} className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
-                <button className="p-2 bg-[#E4A11B] rounded-lg text-white disabled:opacity-60" onClick={() => setIsUpdate(!isUpdate)} disabled={isVerified}>Ubah Data</button>
+                <button className="p-2 bg-[#E4A11B] rounded-lg text-white disabled:opacity-60" onClick={() => setIsUpdate(!isUpdate)} disabled={!isEditable}>Ubah Data</button>
               </>
             ) : (
               <>
@@ -185,4 +186,6 @@ const Absen = () => {
   )
 }
 
-export default Absen
+export default dynamic(() => Promise.resolve(Absen), {
+  ssr: false,
+})

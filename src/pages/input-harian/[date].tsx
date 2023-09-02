@@ -11,6 +11,8 @@ import moment from 'moment';
 import 'moment/locale/id';  // Import the Indonesian locale
 import ModalVerifItemShop from '@/components/modals/ModalVerifItemShop';
 import { Icon } from '@iconify/react';
+import dynamic from 'next/dynamic';
+import { BounceLoader } from 'react-spinners';
 
 interface CheckCategoryType {
   name: string;
@@ -21,7 +23,7 @@ moment.locale('id');
 const Date = () => {
   const router = useRouter();
   const { date } = router.query;
-  const thisMonth = moment().format("MMMM YYYY")
+  const thisMonth = moment(date).format("D MMMM YYYY")
   console.log({thisMonth})
 
   const { state, axiosJWT, refreshToken, dispatch } = useSessionUser()
@@ -72,7 +74,7 @@ const Date = () => {
   const handleApproved = async () => {
     let verifDailyReport = null;
     try {
-      verifDailyReport = await axiosJWT.put(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report/verify-shopped-by-category`, 
+      verifDailyReport = await axiosJWT.put(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/daily-report-investor/verify-shopped-by-category`, 
         {
           id: dailyReportId,
           date
@@ -92,16 +94,16 @@ const Date = () => {
     return verifDailyReport.message || "Gagal saat melakukan verifikasi"
   }
 
-  console.log({shopExpense}, {checkCategory}, {isVerified, isAllowedNext})
   return (
     <Layout>
       <div className="flex flex-col gap-10 mt-10">
         <div className="flex flex-col items-center gap-3">
           <Icon icon="mdi:file-report-outline" className="text-7xl" />
-          <p className='text-2xl text-center mx-auto'>Data Pengeluaran ({date} {thisMonth})</p>
+          <p className='text-2xl text-center mx-auto'>Data Pengeluaran ({thisMonth})</p>
         </div>
         <div className="bg-[#2D4356] rounded-2xl  sm:w-[80%] w-full p-5 mx-auto flex flex-col gap-5">
           <p className="text-2xl text-white text-center">Pilih Kategori Data</p>
+          <BounceLoader className="mx-auto" loading={loading} color="#e5f3f0" />
           <div className="flex flex-col gap-4">
             {checkCategory.map((category: CheckCategoryType) => {
               return (
@@ -123,7 +125,7 @@ const Date = () => {
           </div>
           <div className="text-white flex justify-between">
             <Link href="/input-harian" className="p-2 bg-transparent border border-white rounded-lg text-white">Kembali</Link>
-            {isAllowedNext && isVerified ? 
+            {/* {isAllowedNext && isVerified ? 
               (<Link href={`/input-harian/${date}/final-category`} className="p-2 bg-[#14A44D] rounded-lg text-white">Selanjutnya</Link>) 
             : isAllowedNext && !isVerified ? 
               (
@@ -132,7 +134,8 @@ const Date = () => {
               (
                 <button className="p-2 bg-[#14A44D] rounded-lg text-white opacity-60" disabled>Selanjutnya</button>
               )
-            }
+            } */}
+            <Link href={`/input-harian/${date}/final-category`} className="p-2 bg-[#14A44D] rounded-lg text-white">Selanjutnya</Link>
           </div>
           {showModalVerif && (
             <ModalVerifItemShop onApproved={handleApproved}  setShowModal={setShowModalVerif} />
@@ -143,4 +146,6 @@ const Date = () => {
   )
 }
 
-export default Date
+export default dynamic(() => Promise.resolve(Date), {
+  ssr: false,
+})

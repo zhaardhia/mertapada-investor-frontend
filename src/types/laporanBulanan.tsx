@@ -1,0 +1,33 @@
+export interface LaporanBulananType {
+  day1?: string | number | undefined;
+  day2?: string | number | undefined;
+  day3?: string | number | undefined;
+  day4?: string | number | undefined;
+  day5?: string | number | undefined;
+  day6?: string | number | undefined;
+  day7?: string | number | undefined;
+  day8?: string | number | undefined;
+  day9?: string | number | undefined;
+  day10?: string | number | undefined;
+  day11?: string | number | undefined;
+  day12?: string | number | undefined;
+  day13?: string | number | undefined;
+  day14?: string | number | undefined;
+  day15?: string | number | undefined;
+  day16?: string | number | undefined;
+  day17?: string | number | undefined;
+  day18?: string | number | undefined;
+  day19?: string | number | undefined;
+  day20?: string | number | undefined;
+  day21?: string | number | undefined;
+  day22?: string | number | undefined;
+  day23?: string | number | undefined;
+  day24?: string | number | undefined;
+  day25?: string | number | undefined;
+  day26?: string | number | undefined;
+  day27?: string | number | undefined;
+  day28?: string | number | undefined;
+  day29?: string | number | undefined;
+  day30?: string | number | undefined;
+  day31?: string | number | undefined;
+}

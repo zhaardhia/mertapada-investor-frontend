@@ -111,4 +111,6 @@ const FinalRecapDetail = () => {
   )
 }
 
-export default FinalRecapDetail
+export default dynamic(() => Promise.resolve(FinalRecapDetail), {
+  ssr: false,
+})
