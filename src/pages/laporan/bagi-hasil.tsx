@@ -397,17 +397,28 @@ const BagiHasil = () => {
             focus-visible:outline-none focus-visible:ring focus-visible:ring-pink-500
             rounded group-open:rounded-b-none group-open:z-[1] relative
             ">
-              <div className="flex w-5 items-center justify-center">
-                {/* <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
+              {/* <div className="flex w-5 items-center justify-center">
+                <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
                 group-open:rotate-90 transition-transform origin-left group-open:mb-1
-                "></div> */}
+                "></div>
                 <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
                   group-open:rotate-90 transition-transform origin-left group-open:mb-1
                   hidden sm:block
                 "></div>
-              </div>
+              </div> */}
               <div className="flex justify-between items-center sm:w-[95%] w-[90%] sm:text-base text-sm">
-                <h3 className="flex flex-1 p-2">Transfer ke Investor</h3>
+                <div className="flex">
+                  <div className="flex w-5 items-center justify-center">
+                    {/* <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
+                    group-open:rotate-90 transition-transform origin-left group-open:mb-1
+                    "></div> */}
+                    <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
+                      group-open:rotate-90 transition-transform origin-left group-open:mb-1
+                      hidden sm:block
+                    "></div>
+                  </div>
+                  <h3 className="flex flex-1 p-2">Transfer ke Investor</h3>
+                </div>
                 <p className="text-white font-semibold">{formatRupiah(data?.transferToInvestor?.transferKeInvestor)}</p>
               </div>
             </summary>
