@@ -398,8 +398,12 @@ const BagiHasil = () => {
             rounded group-open:rounded-b-none group-open:z-[1] relative
             ">
               <div className="flex w-5 items-center justify-center">
-                <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
+                {/* <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
                 group-open:rotate-90 transition-transform origin-left group-open:mb-1
+                "></div> */}
+                <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
+                  group-open:rotate-90 transition-transform origin-left group-open:mb-1
+                  hidden sm:block
                 "></div>
               </div>
               <div className="flex justify-between items-center sm:w-[95%] w-[90%] sm:text-base text-sm">
