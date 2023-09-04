@@ -260,7 +260,7 @@ const BagiHasil = () => {
               <p>Pendapatan (OMZET)</p>
               <p className="text-white font-semibold">{formatRupiah(data?.omset)}</p>
             </div>
-            <details className="bg-transparent border border-[#F27676] shadow rounded group text-white">
+            {/* <details className="bg-transparent border border-[#F27676] shadow rounded group text-white">
               <summary className="list-none flex flex-wrap items-center cursor-pointer
               focus-visible:outline-none focus-visible:ring focus-visible:ring-pink-500
               rounded group-open:rounded-b-none group-open:z-[1] relative 
@@ -296,8 +296,35 @@ const BagiHasil = () => {
                   <p>{formatRupiah(data?.expense?.lainLain)}</p>
                 </div>
               </div>
-            </details>
-            <details className="bg-transparent border border-[#F27676] shadow rounded group text-white">
+            </details> */}
+            <div className="bg-transparent border border-[#F27676] shadow rounded group text-white">
+              <div className="flex justify-between items-center w-[98%] mx-auto sm:text-base text-sm">
+                <h3 className="flex flex-1 p-2">Pengeluaran (Belanja)</h3>
+                <p className="text-white font-semibold mr-2">{formatRupiah(data?.expense?.shopExpense)}</p>
+              </div>
+              <div className="p-4 sm:text-base text-sm">
+                <div className="flex justify-between">
+                  <p>Lauk - pauk:</p>
+                  <p>{formatRupiah(data?.expense?.laukPauk)}</p>
+                </div>
+                <hr className="my-2" />
+                <div className="flex justify-between">
+                  <p>Bumbu - sayuran:</p>
+                  <p>{formatRupiah(data?.expense?.bumbuSayuran)}</p>
+                </div>
+                <hr className="my-2" />
+                <div className="flex justify-between">
+                  <p>Sembako - minuman:</p>
+                  <p>{formatRupiah(data?.expense?.sembakoMinuman)}</p>
+                </div>
+                <hr className="my-2" />
+                <div className="flex justify-between">
+                  <p>Lain - lain:</p>
+                  <p>{formatRupiah(data?.expense?.lainLain)}</p>
+                </div>
+              </div>
+            </div>
+            {/* <details className="bg-transparent border border-[#F27676] shadow rounded group text-white">
               <summary className="list-none flex flex-wrap items-center cursor-pointer
               focus-visible:outline-none focus-visible:ring focus-visible:ring-pink-500
               rounded group-open:rounded-b-none group-open:z-[1] relative
@@ -331,23 +358,78 @@ const BagiHasil = () => {
                   )
                 })}
               </div>
-            </details>
+            </details> */}
+            <div className="bg-transparent border border-[#F27676] shadow rounded group text-white">
+              <div className="flex justify-between items-center w-[98%] mx-auto sm:text-base text-sm">
+                <h3 className="flex flex-1 p-2">Gaji & Sewa</h3>
+                <p className="text-white font-semibold mr-2">{formatRupiah(data?.gajiSewa?.gajiSewaTotal)}</p>
+              </div>
+              <div className="p-4 sm:text-base text-sm">
+                {data?.gajiSewa?.gaji?.map((gaji) => {
+                  return (
+                    <div className="flex justify-between my-2">
+                      <p>Gaji Pak / Bu {gaji?.name}:</p>
+                      <p>{formatRupiah(gaji?.salaryPerDay)}</p>
+                    </div>
+                  )
+                })}
+                <hr className="my-2" />
+                {data?.gajiSewa?.sewa?.map((sewa) => {
+                  return (
+                    <div className="flex justify-between my-2">
+                      <p>Sewa {sewa?.name}:</p>
+                      <p>{formatRupiah(sewa?.rentPerDay)}</p>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
             {data?.additionExpense && (
-              <details className="bg-transparent border border-[#F27676] shadow rounded group text-white">
-                <summary className="list-none flex flex-wrap items-center cursor-pointer
-                focus-visible:outline-none focus-visible:ring focus-visible:ring-pink-500
-                rounded group-open:rounded-b-none group-open:z-[1] relative
-                ">
-                  <div className="flex w-5 items-center justify-center">
-                    <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
-                    group-open:rotate-90 transition-transform origin-left group-open:mb-1
-                    "></div>
-                  </div>
-                  <div className="flex justify-between items-center sm:w-[95%] w-[90%] sm:text-base text-sm">
-                    <h3 className="flex flex-1 p-2">Pengeluaran Tambahan</h3>
-                    <p className="text-white font-semibold">{formatRupiah(data?.additionExpense?.additionExpenseTotal)}</p>
-                  </div>
-                </summary>
+              // <details className="bg-transparent border border-[#F27676] shadow rounded group text-white">
+              //   <summary className="list-none flex flex-wrap items-center cursor-pointer
+              //   focus-visible:outline-none focus-visible:ring focus-visible:ring-pink-500
+              //   rounded group-open:rounded-b-none group-open:z-[1] relative
+              //   ">
+              //     <div className="flex w-5 items-center justify-center">
+              //       <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
+              //       group-open:rotate-90 transition-transform origin-left group-open:mb-1
+              //       "></div>
+              //     </div>
+              //     <div className="flex justify-between items-center sm:w-[95%] w-[90%] sm:text-base text-sm">
+              //       <h3 className="flex flex-1 p-2">Pengeluaran Tambahan</h3>
+              //       <p className="text-white font-semibold">{formatRupiah(data?.additionExpense?.additionExpenseTotal)}</p>
+              //     </div>
+              //   </summary>
+              //   <div className="p-4 sm:text-base text-sm">
+              //     {data?.additionExpense?.additionExpenseItems.map((addItem) => {
+              //       return (
+              //         <>
+              //           <div className="flex justify-between my-2">
+              //             <p>{addItem?.name}:</p>
+              //             <div className="flex gap-3 items-center">
+              //               <p>{formatRupiah(addItem?.nominal)}</p>
+              //               <button onClick={() => {
+              //                 setIdExpense(addItem.id)
+              //                 setIsUpdateExpense(true)
+              //                 setName(addItem.name)
+              //                 setPrice(addItem.nominal)
+              //                 setShowModal(true)
+              //               }}>
+              //                 <Icon icon="gala:settings" width={30} />
+              //               </button>
+              //             </div>
+              //           </div>
+              //           <hr className="my-2" />
+              //         </>
+              //       )
+              //     })}
+              //   </div>
+              // </details>
+              <div className="bg-transparent border border-[#F27676] shadow rounded group text-white">
+                <div className="flex justify-between items-center w-[98%] mx-auto sm:text-base text-sm">
+                  <h3 className="flex flex-1 p-2">Pengeluaran Tambahan</h3>
+                  <p className="text-white font-semibold mr-2">{formatRupiah(data?.additionExpense?.additionExpenseTotal)}</p>
+                </div>
                 <div className="p-4 sm:text-base text-sm">
                   {data?.additionExpense?.additionExpenseItems.map((addItem) => {
                     return (
@@ -372,7 +454,7 @@ const BagiHasil = () => {
                     )
                   })}
                 </div>
-              </details>
+              </div>
             )}
             <div className="p-2 bg-transparent border border-[#87E490] rounded text-white sm:text-base text-sm flex justify-between">
               <p>Keuntungan Bersih</p>
@@ -392,33 +474,13 @@ const BagiHasil = () => {
             <hr className="my-2" />
           </div>
 
-          <details className="bg-transparent border border-white mb-4 shadow rounded group text-white">
+          {/* <details className="bg-transparent border border-white mb-4 shadow rounded group text-white">
             <summary className="list-none flex flex-wrap items-center cursor-pointer
             focus-visible:outline-none focus-visible:ring focus-visible:ring-pink-500
             rounded group-open:rounded-b-none group-open:z-[1] relative
             ">
-              {/* <div className="flex w-5 items-center justify-center">
-                <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
-                group-open:rotate-90 transition-transform origin-left group-open:mb-1
-                "></div>
-                <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
-                  group-open:rotate-90 transition-transform origin-left group-open:mb-1
-                  hidden sm:block
-                "></div>
-              </div> */}
               <div className="flex justify-between items-center sm:w-[95%] w-[90%] sm:text-base text-sm">
-                <div className="flex">
-                  <div className="flex w-5 items-center justify-center">
-                    {/* <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
-                    group-open:rotate-90 transition-transform origin-left group-open:mb-1
-                    "></div> */}
-                    <div className="border-8 border-transparent border-l-white ml-2 group-open:ml-5
-                      group-open:rotate-90 transition-transform origin-left group-open:mb-1
-                      hidden sm:block
-                    "></div>
-                  </div>
-                  <h3 className="flex flex-1 p-2">Transfer ke Investor</h3>
-                </div>
+                <h3 className="flex flex-1 p-2">Transfer ke Investor</h3>
                 <p className="text-white font-semibold">{formatRupiah(data?.transferToInvestor?.transferKeInvestor)}</p>
               </div>
             </summary>
@@ -433,7 +495,33 @@ const BagiHasil = () => {
                 <p>{formatRupiah(data?.transferToInvestor?.totalSewa)}</p>
               </div>
             </div>
-          </details>
+          </details> */}
+          <div className="bg-transparent border border-white mb-4 shadow rounded group text-white">
+            {/* <summary className="list-none flex flex-wrap items-center cursor-pointer
+            focus-visible:outline-none focus-visible:ring focus-visible:ring-pink-500
+            rounded group-open:rounded-b-none group-open:z-[1] relative
+            ">
+              <div className="flex justify-between items-center sm:w-[95%] w-[90%] sm:text-base text-sm">
+                <h3 className="flex flex-1 p-2">Transfer ke Investor</h3>
+                <p className="text-white font-semibold">{formatRupiah(data?.transferToInvestor?.transferKeInvestor)}</p>
+              </div>
+            </summary> */}
+            <div className="flex justify-between items-center w-[98%] mx-auto sm:text-base text-sm">
+                <h3 className="flex flex-1 p-2">Transfer ke Investor</h3>
+                <p className="text-white font-semibold mr-2">{formatRupiah(data?.transferToInvestor?.transferKeInvestor)}</p>
+              </div>
+            <div className="p-4 sm:text-base text-sm">
+              <div className="flex justify-between">
+                <p>Bagi hasil:</p>
+                <p>{formatRupiah(data?.transferToInvestor?.bagiHasil)}</p>
+              </div>
+              <hr className="my-2" />
+              <div className="flex justify-between">
+                <p>Sewa:</p>
+                <p>{formatRupiah(data?.transferToInvestor?.totalSewa)}</p>
+              </div>
+            </div>
+          </div>
           {data?.endDate && (
             <button className="p-2 bg-[#3B71CA] hover:bg-[#4177cf] rounded-lg text-white -mt-5 shadow-md"
               onClick={() => setShowModal(!showModal)}
