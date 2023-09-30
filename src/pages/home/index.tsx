@@ -41,7 +41,7 @@ const index: FC = () => {
           variants={animateOpacity}
         >
           <Image src="/icon-brand.png" alt={'warteg kharisma bahari'} width={100} height={100} />
-          <p className='text-2xl text-start mx-auto'>Selamat Datang Pengelola!</p>
+          <p className='text-2xl text-start mx-auto'>Selamat Datang Investor!</p>
         </motion.div>
         <motion.div 
           className="bg-[#2D4356] shadow-xl rounded-2xl sm:w-[80%] w-full grid grid-cols-2 sm:gap-5 gap-2 items-center sm:p-10 p-5 mx-auto place-items-center h-[15rem]"
