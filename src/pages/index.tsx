@@ -29,7 +29,7 @@ export default function Home() {
         `${process.env.NEXT_PUBLIC_BASE_URL}/v1/user-investor/login-user`,
         {
           username,
-          password,
+          password, 
         },
         {
           withCredentials: true,
