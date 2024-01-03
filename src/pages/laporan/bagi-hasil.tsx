@@ -201,7 +201,7 @@ const BagiHasil = () => {
 
   const handleMonthlyExpenseVerified = async () => {
     try {
-      await axiosJWT.post(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/bulanan-tambahan/verifikasi`, 
+      await axiosJWT.post(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/bulanan-tambahan/`, 
         {
           selected_month: selectedMonth?.value
         },
